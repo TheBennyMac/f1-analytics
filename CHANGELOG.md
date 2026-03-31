@@ -7,7 +7,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-_v0.1.0 Foundation work in progress on `release/v0.1.0`._
+_v0.2.0 2022 Era Baseline work in progress on `release/v0.2.0`._
+
+---
+
+## [v0.1.0] — 2026-03-31
+
+### Added
+
+- `src/data/fastf1_loader.py` — FastF1 session loader with automatic cache initialisation
+- `src/data/openf1_client.py` — OpenF1 REST client (sessions, drivers, laps, pit stops, race control)
+- `src/models/` — `RaceResult`, `LapSummary`, `DriverStanding`, `ConstructorStanding`
+- `src/utils/era_helper.py` — maps calendar year → era name + year-within-era (1-indexed)
+- `tests/test_models.py`, `tests/test_era_helper.py` — 21 tests, all passing
+- `notebooks/00_data_validation.ipynb` — end-to-end validation of all data sources and models
 
 ---
 
