@@ -69,13 +69,21 @@
     the full field, not just the front runners
 - [ ] Sprint race analysis
   - Load sprint sessions alongside race sessions (`session_type='S'`)
-  - Compare sprint vs race pace for the same drivers on the same weekend
-  - Track position changes across sprint vs full race
-  - **2026 observation to test:** first half to two-thirds of sprint
-    races appear more competitive than post-tyre-change phase — test
-    whether lap time deltas widen significantly after the pit window
-  - Flag sprint weekends separately in all convergence metrics as they
-    may distort tyre strategy comparisons
+  - Compare sprint vs full race pace for same drivers on same weekend
+  - Track position changes: sprint vs full race
+  - Note: sprints have no mandatory pit stop — most cars finish on
+    original tyres, making them a useful pit-stop-free baseline
+  - Flag sprint weekends separately in all convergence metrics
+- [ ] Pre vs post pit window excitement in full-length Grand Prix
+  - **2026 observation to test:** first half to two-thirds of the full
+    race (before the main pit window) appears more competitive than
+    the post-stop phase, where fresh tyres spread the field
+  - Measure lap time deltas and position changes before and after the
+    median pit lap for each race
+  - Compare sprint (no stops) vs full race post-stop phase — does
+    removing pit strategy produce closer racing?
+  - Test whether this pattern is consistent across eras or specific
+    to 2026 tyre characteristics
 - [ ] Notebook: `notebooks/03_pace_and_strategy.ipynb`
 
 ## Should Have (v0.5.0 — Narrative Testing)
