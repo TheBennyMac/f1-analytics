@@ -43,7 +43,10 @@
 - [ ] Quali-to-race pace delta: who converts, who doesn't
 - [ ] Intra-team driver comparison: who adapts better to a regulation reset?
   - Same constructor, same car — isolates driver factor from machinery
-  - Metrics: quali gap between teammates, race pace delta, DNF rate, tyre degradation handling
+  - **Primary metric: qualifying gap between teammates** — purest driver comparison,
+    eliminates strategy, traffic, and luck as variables
+  - Secondary metric: race pace delta — useful but noisier
+  - Also track: DNF rate, tyre degradation handling
   - Primary lens: 2026 Year 1 vs 2022 Year 1 (regulation reset comparison)
   - Exclude races with mechanical DNFs to keep the comparison clean
 - [ ] Notebook: `notebooks/03_pace_and_strategy.ipynb`
