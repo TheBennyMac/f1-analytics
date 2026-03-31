@@ -10,14 +10,14 @@
 
 ---
 
-## Must Have (v0.1.0 — Foundation)
+## Must Have (v0.1.0 — Foundation) ✅ Released 2026-03-31
 
-- [ ] FastF1 data loader with caching (`src/data/fastf1_loader.py`)
-- [ ] OpenF1 client for results and standings (`src/data/openf1_client.py`)
-- [ ] Core data models: `RaceResult`, `LapSummary`, `DriverStanding`, `ConstructorStanding`
-- [ ] Era helper utility: year → era name + year-within-era (`src/utils/era_helper.py`)
-- [ ] Basic test suite covering models and era helper
-- [ ] Notebook: `notebooks/00_data_validation.ipynb` — confirm data loads correctly end-to-end
+- [x] FastF1 data loader with caching (`src/data/fastf1_loader.py`)
+- [x] OpenF1 client for results and standings (`src/data/openf1_client.py`)
+- [x] Core data models: `RaceResult`, `LapSummary`, `DriverStanding`, `ConstructorStanding`
+- [x] Era helper utility: year → era name + year-within-era (`src/utils/era_helper.py`)
+- [x] Basic test suite covering models and era helper (21 tests passing)
+- [x] Notebook: `notebooks/00_data_validation.ipynb` — confirmed end-to-end
 
 ## Must Have (v0.2.0 — 2022 Era Baseline)
 
@@ -68,4 +68,5 @@
 
 ## Completed
 
-- [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills (v0.1.0)
+- [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models, era helper, tests, validation notebook
+- [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills, docs, PR template, CHANGELOG
