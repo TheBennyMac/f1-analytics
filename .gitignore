@@ -15,13 +15,18 @@ venv/
 env/
 
 # FastF1 cache — can be large, always regenerated
-data/cache/
+data/cache/*
+!data/cache/.gitkeep
 
 # Environment / secrets
 .env
 *.env.local
 
-# Streamlit
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Streamlit (not yet adopted — placeholder)
 .streamlit/secrets.toml
 
 # OS
