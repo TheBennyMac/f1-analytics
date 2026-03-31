@@ -109,3 +109,62 @@ The 2022–2025 Ground Effect Era is the primary baseline. Earlier eras are out 
 - Analysis modules should parameterise by era year (Year 1, Year 2…) not calendar year
 - The `EraHelper` utility must correctly map 2022→Year 1, 2023→Year 2, etc.
 - If pre-2022 context is ever needed, it should be clearly labelled as supplementary
+
+---
+
+## ADR-005: FastF1 as primary source for 2026 data; OpenF1 as cross-check
+
+**Date:** 2026-03-31
+**Status:** Accepted
+
+### Context
+
+The 2026 season is live. A decision was needed on whether to use FastF1, OpenF1, or both for ingesting 2026 race data.
+
+### Decision
+
+FastF1 is the primary source for 2026 session data, consistent with the 2022–2025 baseline. OpenF1 is used as a secondary cross-check on results and standings where coverage overlaps (2023+).
+
+### Rationale
+
+- Consistency with the baseline is critical for like-for-like comparison — switching data sources mid-analysis would introduce noise
+- FastF1 provides richer session data (telemetry, sector times) not available via OpenF1
+- OpenF1 as a cross-check catches any FastF1 data quality issues on new sessions before they propagate into analysis
+
+### Consequences
+
+- The data loader pattern established in v0.1.0 applies unchanged to 2026 sessions
+- If FastF1 and OpenF1 results disagree on a session, investigate before proceeding
+
+---
+
+## ADR-006: Era comparison methodology — same circuit primary, year-within-era secondary
+
+**Date:** 2026-03-31
+**Status:** Accepted
+
+### Context
+
+When comparing 2022 Ground Effect Era Year 1 against 2026 Era Year 1, a methodology was needed for aligning races across seasons for like-for-like comparison.
+
+### Decision
+
+Same circuit is the primary comparison basis. Year-within-era position is the secondary lens for convergence trend analysis.
+
+### Rationale
+
+- Circuit characteristics (layout, surface, tyre demands, overtaking opportunities) strongly influence all metrics — lap time deltas, DNF rates, and qualifying conversion
+- Comparing Bahrain 2022 to Bahrain 2026 is far more meaningful than comparing round 1 to round 1 when the calendar order differs
+- Year-within-era (Y1, Y2, Y3...) is valid for tracking convergence trends across a full season but should not be used for individual race comparisons
+
+### Consequences
+
+- 2026 analysis must map each race to its circuit, not its round number
+- Circuits that appear in both eras (Bahrain, Australia, etc.) are the strongest comparison points
+- New circuits on the 2026 calendar have no direct baseline equivalent — flag these clearly in analysis
+
+### 2026-specific context
+
+- Melbourne 2025 was rain-affected — flag when used as a baseline comparator for 2026 Australia
+- Japan (Suzuka) moved earlier in the calendar in recent years — round number comparisons are misleading; use circuit-based matching
+- First three 2026 races: Australia (R1), China (R2), Japan (R3)
