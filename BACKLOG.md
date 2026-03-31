@@ -43,12 +43,39 @@
 - [ ] Quali-to-race pace delta: who converts, who doesn't
 - [ ] Intra-team driver comparison: who adapts better to a regulation reset?
   - Same constructor, same car — isolates driver factor from machinery
-  - **Primary metric: qualifying gap between teammates** — purest driver comparison,
-    eliminates strategy, traffic, and luck as variables
+  - **Primary metric: qualifying gap between teammates** — purest driver
+    comparison, eliminates strategy, traffic, and luck as variables
   - Secondary metric: race pace delta — useful but noisier
   - Also track: DNF rate, tyre degradation handling
   - Primary lens: 2026 Year 1 vs 2022 Year 1 (regulation reset comparison)
   - Exclude races with mechanical DNFs to keep the comparison clean
+- [ ] Field size normalisation for convergence comparisons
+  - Cap field comparisons at the lowest classified finisher count across
+    the races being compared (e.g. 12 finishers in 2022 Melbourne)
+  - Offer fixed P1–P10 as primary view; normalised field as secondary
+  - Flag attrition races clearly so gaps aren't misread as pace gaps
+- [ ] Points boundary and P11 analysis
+  - Gap from P10 to P11 per race — how arbitrary is the points cut?
+  - P11 gap to P1 as an alternative field spread metric
+  - "Near-miss points" frequency: how often does P11 finish within 5s
+    of P10 across an era?
+  - Connects to intra-team analysis: quali P9 but finish P11 is a
+    different story to quali P14 and race to P11
+- [ ] Tail-of-field gap analysis (classified finishers only)
+  - For drivers outside the points, track gap to race leader and to P10
+    per race — how far behind is the back of the grid?
+  - Only include drivers who completed the race distance
+  - Useful for measuring whether regulation resets compress or stretch
+    the full field, not just the front runners
+- [ ] Sprint race analysis
+  - Load sprint sessions alongside race sessions (`session_type='S'`)
+  - Compare sprint vs race pace for the same drivers on the same weekend
+  - Track position changes across sprint vs full race
+  - **2026 observation to test:** first half to two-thirds of sprint
+    races appear more competitive than post-tyre-change phase — test
+    whether lap time deltas widen significantly after the pit window
+  - Flag sprint weekends separately in all convergence metrics as they
+    may distort tyre strategy comparisons
 - [ ] Notebook: `notebooks/03_pace_and_strategy.ipynb`
 
 ## Should Have (v0.5.0 — Narrative Testing)
@@ -57,6 +84,11 @@
 - [ ] "Monaco produces processional races" — overtake index by circuit
 - [ ] "Safety car lottery" — SC frequency and position change correlation
 - [ ] "DRS made overtaking artificial" — overtake index pre/post DRS
+- [ ] "Sprints are only exciting before the tyre stops" — compare lap
+    time deltas and position changes in first vs second half of sprint
+    races; test whether 2026 observation holds across the era
+- [ ] "Turn 1 chaos is worse in regulation reset years" — compare
+    first-lap incidents and retirements in Year 1 vs Year 2+ of each era
 - [ ] Notebook: `notebooks/04_narrative_testing.ipynb`
 
 ## Could Have (v0.6.0 — UI / Publishing)
