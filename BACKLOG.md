@@ -41,6 +41,11 @@
 - [ ] Sector time breakdown (FastF1, 2022+)
 - [ ] Tyre compound strategy by team across eras
 - [ ] Quali-to-race pace delta: who converts, who doesn't
+- [ ] Intra-team driver comparison: who adapts better to a regulation reset?
+  - Same constructor, same car — isolates driver factor from machinery
+  - Metrics: quali gap between teammates, race pace delta, DNF rate, tyre degradation handling
+  - Primary lens: 2026 Year 1 vs 2022 Year 1 (regulation reset comparison)
+  - Exclude races with mechanical DNFs to keep the comparison clean
 - [ ] Notebook: `notebooks/03_pace_and_strategy.ipynb`
 
 ## Should Have (v0.5.0 — Narrative Testing)
