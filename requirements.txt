@@ -1,7 +1,17 @@
+# Data acquisition
 fastf1
-pandas
-numpy
-plotly
-streamlit
 requests
 python-dotenv
+
+# Data processing
+pandas
+numpy
+
+# Notebook & visualisation
+jupyterlab
+matplotlib
+seaborn
+plotly
+
+# Testing
+pytest

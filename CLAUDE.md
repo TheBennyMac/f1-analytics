@@ -21,29 +21,30 @@ An F1 data analytics project focused on surfacing objective insights from histor
 
 ### 2026 Season Context (as of 2026-03-31)
 
-- First two races (Middle East) cancelled — next race is Miami GP (~May 2026)
-- This gives time to build and validate the 2022 era foundation before 2026 data accumulates
+- Completed rounds: Australia (R1), China (R2), Japan (R3)
+- Bahrain and Saudi Arabia (Middle East rounds, April 2026) cancelled due to regional conflict
+- Next upcoming race: Miami GP (~May 2026)
 - The convergence narrative for 2026 will be built incrementally across the season
 
 ## Regulation Eras (Domain Knowledge)
 
 Use these boundaries for era-based grouping:
 
-| Era                    | Years     | Key Change                              |
-|------------------------|-----------|------------------------------------------|
-| Refuelling Era         | 1994–2009 | Refuelling allowed; V10 → V8            |
-| KERS/DRS Era           | 2010–2013 | No refuelling, KERS, DRS introduced 2011 |
-| Hybrid Power Unit Era  | 2014–2021 | V6 turbo hybrid; complex PU regulations  |
-| Ground Effect Era      | 2022–2025 | Cost cap, ground effect aero, 18" tyres  |
-| 2026 Era               | 2026–     | New PU regs, active aero, current season |
+| Era                   | Years     | Key Change                                |
+|-----------------------|-----------|-------------------------------------------|
+| Refuelling Era        | 1994–2009 | Refuelling allowed; V10 -> V8            |
+| KERS/DRS Era          | 2010–2013 | No refuelling, KERS, DRS introduced 2011  |
+| Hybrid Power Unit Era | 2014–2021 | V6 turbo hybrid; complex PU regulations   |
+| Ground Effect Era     | 2022–2025 | Cost cap, ground effect aero, 18" tyres   |
+| 2026 Era              | 2026–     | New PU regs, active aero, current season  |
 
 **Within each era, year 1 is the regulation reset year.** Analysis of convergence should track gap metrics relative to "Year N of era" not calendar year.
 
 ## Data Sources
 
 - **FastF1** (primary): Python library for session data from ~2018 onward. Lap times, telemetry, tyre compounds, weather, sector times, pit stops. Requires local cache.
-- **Ergast API** (historical breadth): REST API for results, standings, lap times back to 1950. Use for era-level statistics. Note: Ergast is in maintenance mode — verify availability.
-- **OpenF1** (alternative REST): Newer open API, good for recent seasons.
+- **OpenF1** (secondary REST): Actively maintained open API covering 2023–present. Used for results, standings, and session data where FastF1 is insufficient.
+- **Ergast API** (excluded): In maintenance mode and reaches back to 1950, but pre-2022 data is out of scope — the further back, the less technically relevant for era comparison. Revisit only if pre-2022 narrative testing (v0.5.0) requires it.
 - **Do NOT use** F1 Live Timing credentials or f1-dash.com until licensing is verified.
 
 ### FastF1 Cache
@@ -61,13 +62,15 @@ fastf1.Cache.enable_cache('data/cache/')
 f1-analytics/
 ├── CLAUDE.md              # This file
 ├── BACKLOG.md             # Feature backlog with MoSCoW prioritization
+├── CHANGELOG.md           # Version history
+├── README.md              # Project overview (GitHub-facing)
 ├── notebooks/             # Jupyter notebooks — primary analysis output (numbered)
 │   ├── 00_data_validation.ipynb
 │   ├── 01_2022_era_baseline.ipynb
 │   ├── 02_2026_era_year1.ipynb
 │   └── ...
 ├── src/
-│   ├── data/              # Data loaders (FastF1, Ergast/OpenF1 clients)
+│   ├── data/              # Data loaders (FastF1 loader, OpenF1 client)
 │   ├── models/            # Data models (RaceResult, LapSummary, DriverStanding, etc.)
 │   ├── analysis/          # Analysis modules (era_convergence, reliability, pace, etc.)
 │   ├── visualizations/    # Placeholder — no framework chosen yet
@@ -75,7 +78,9 @@ f1-analytics/
 ├── tests/                 # pytest test files
 ├── data/
 │   └── cache/             # FastF1 local cache (gitignored)
-└── docs/                  # Era analysis specs, data source notes
+└── docs/
+    ├── decisions.md       # Architectural decision log (the why behind key choices)
+    └── data_sources.md    # API reference — FastF1, OpenF1 coverage and usage
 ```
 
 ## Development Guidelines
