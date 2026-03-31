@@ -1,0 +1,7 @@
+fastf1
+pandas
+numpy
+plotly
+streamlit
+requests
+python-dotenv
