@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.1.0 (Scaffolding)
+## Current Version: v0.2.0 (2022 Era Baseline)
 
 ### Scope Decision (2026-03-31)
 
@@ -19,13 +19,13 @@
 - [x] Basic test suite covering models and era helper (21 tests passing)
 - [x] Notebook: `notebooks/00_data_validation.ipynb` — confirmed end-to-end
 
-## Must Have (v0.2.0 — 2022 Era Baseline)
+## Must Have (v0.2.0 — 2022 Era Baseline) ✅ Released 2026-04-01
 
-- [ ] Constructor points spread across 2022–2025 (Gini coefficient + raw gap)
-- [ ] P1–P10 lap time delta trend by year within era
-- [ ] DNF rate by team and year (2022–2025)
-- [ ] Quali position vs race finishing position consistency
-- [ ] Notebook: `notebooks/01_2022_era_baseline.ipynb`
+- [x] Constructor points spread across 2022–2025 (Gini coefficient + raw gap)
+- [x] P1–P10 lap time delta trend by year within era
+- [x] DNF rate by team and year (2022–2025)
+- [x] Quali position vs race finishing position consistency
+- [x] Notebook: `notebooks/01_2022_era_baseline.ipynb`
 
 ## Must Have (v0.3.0 — 2026 Era: First Data)
 
@@ -116,5 +116,7 @@
 
 ## Completed
 
+- [x] v0.2.0 Baseline: points spread, lap time delta, DNF rates,
+  quali->race conversion, 74 races 1478 entries
 - [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models, era helper, tests, validation notebook
 - [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills, docs, PR template, CHANGELOG

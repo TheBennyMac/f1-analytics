@@ -7,7 +7,43 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-_v0.2.0 2022 Era Baseline work in progress on `release/v0.2.0`._
+_v0.3.0 2026 Era: First Data — work begins on `release/v0.3.0`._
+
+---
+
+## [v0.2.0] — 2026-04-01
+
+### Added
+
+- `src/analysis/points_spread.py` — Gini coefficient, cumulative points gap,
+  season-end Gini by round
+- `src/analysis/reliability.py` — DNF rate by constructor/driver/year,
+  DNF cause frequency
+- `src/analysis/lap_time_delta.py` — fastest lap per driver, P1–Pn gap,
+  season mean gap
+- `src/analysis/quali_race_delta.py` — position delta, quali->race conversion
+  by driver and constructor
+- `src/analysis/__init__.py` — unified public API across all analysis modules
+- `tests/test_points_spread.py`, `tests/test_reliability.py`,
+  `tests/test_lap_time_delta.py`, `tests/test_quali_race_delta.py`
+- `notebooks/01_2022_era_baseline.ipynb` — full 2022–2025 baseline:
+  74 races, 1478 entries
+
+### Analysis
+
+- Constructor points Gini: 2022 anomaly; subsequent years trend toward
+  convergence
+- Lap time field spread: downward trend across era; 2024 anomaly flagged
+  for further investigation
+- DNF rates: 2024 showed elevated failure rates across most constructors
+- Quali->race conversion: Red Bull pattern requires year-on-year breakdown
+  for meaningful interpretation
+
+### Decisions
+
+- Same circuit as primary comparison basis for 2026 vs 2022 (not round
+  number) — ADR-006
+- FastF1 primary for 2026 data; OpenF1 as cross-check — ADR-005
 
 ---
 
