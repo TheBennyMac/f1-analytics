@@ -27,6 +27,10 @@ def fastest_lap_per_driver(laps_df: pd.DataFrame) -> pd.DataFrame:
         clean = clean[~clean["PitOutLap"].fillna(False)]
     if "PitInLap" in clean.columns:
         clean = clean[~clean["PitInLap"].fillna(False)]
+    # Exclude laps flagged as inaccurate by FastF1 — these include SC/VSC laps
+    # where drivers are not pushing, which would distort the pace comparison.
+    if "IsAccurate" in clean.columns:
+        clean = clean[clean["IsAccurate"].fillna(False)]
     clean = clean.dropna(subset=["LapTime"])
 
     clean["lap_s"] = clean["LapTime"].dt.total_seconds()

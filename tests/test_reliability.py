@@ -7,9 +7,14 @@ class TestIsDnf:
     def test_finished_is_not_dnf(self):
         assert is_dnf("Finished") is False
 
-    def test_lapped_finisher_is_not_dnf(self):
+    def test_lapped_finisher_historical_format_is_not_dnf(self):
         assert is_dnf("+1 Lap") is False
         assert is_dnf("+2 Laps") is False
+        assert is_dnf("+6 Laps") is False  # beyond hardcoded range
+
+    def test_lapped_finisher_2026_format_is_not_dnf(self):
+        # FastF1 2026+ uses 'Lapped' instead of '+N Lap(s)'
+        assert is_dnf("Lapped") is False
 
     def test_engine_failure_is_dnf(self):
         assert is_dnf("Engine") is True

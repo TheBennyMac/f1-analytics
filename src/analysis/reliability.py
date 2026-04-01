@@ -8,12 +8,18 @@ Classified finishes include: 'Finished', '+1 Lap', '+2 Laps', '+3 Laps', etc.
 import pandas as pd
 
 
-_CLASSIFIED_STATUSES = {"Finished", "+1 Lap", "+2 Laps", "+3 Laps", "+4 Laps", "+5 Laps"}
-
-
 def is_dnf(status: str) -> bool:
-    """Return True if the given result status represents a DNF."""
-    return status not in _CLASSIFIED_STATUSES
+    """Return True if the given result status represents a DNF.
+
+    Classified finishes are: 'Finished', 'Lapped' (FastF1 2026+ format),
+    and the historical '+N Lap(s)' format ('+1 Lap', '+2 Laps', etc.).
+    Both formats represent a driver who completed the race distance.
+    """
+    if status in ("Finished", "Lapped"):
+        return False
+    if status.startswith("+") and "Lap" in status:
+        return False
+    return True
 
 
 def dnf_rate_by_constructor_year(results_df: pd.DataFrame) -> pd.DataFrame:

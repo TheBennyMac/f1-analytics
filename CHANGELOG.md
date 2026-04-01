@@ -7,7 +7,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-_v0.3.0 2026 Era: First Data — work begins on `release/v0.3.0`._
+---
+
+## [v0.3.0] — 2026-04-01
+
+### Added
+
+- `notebooks/02_2026_era_year1.ipynb` — 2026 Year 1 analysis notebook:
+  - Dynamically loads all available 2026 rounds via FastF1 with OpenF1 fallback
+    (re-runnable as Miami and later races land)
+  - Cancelled rounds (Bahrain, Saudi Arabia) skipped gracefully
+  - Same four metrics as baseline: constructor Gini, P1–P10 lap gap,
+    DNF rate, quali→race conversion
+  - Like-for-like Year 1 comparison: 2026 R1–N vs 2022 R1–N (round-matched)
+  - Driver continuity section: who crossed the era boundary and with which team
+- `src/data/fastf1_loader.py` — `get_race_control_flags(session)` function:
+  - Returns `had_sc`, `had_vsc`, `had_red_flag` booleans per race
+  - Uses structured `Flag` column from `race_control_messages` (not free-text)
+- Race control flags (`had_sc`, `had_vsc`, `had_red_flag`) added to both
+  notebook datasets and annotated on lap time charts
+
+### Fixed
+
+- `src/analysis/reliability.py` — `is_dnf()` now correctly treats `'Lapped'`
+  (FastF1 2026+ format) and `'+N Lap(s)'` as classified finishes, not DNFs
+  (previously miscounted 297 lapped finishers as DNFs in the 2022–2025 dataset)
+- `src/analysis/quali_race_delta.py` — same `'Lapped'` fix applied to DNF flag
+- Both notebook loading cells: sprint weekend format filter updated from
+  hardcoded allowlist to `!= 'testing'`, catching `sprint_shootout` (2023)
+  and `sprint_qualifying` (2024+) formats — previously missing 18 races
+- OpenF1 fallback date-based session matching: sprint weekends have two OpenF1
+  sessions labelled `'Race'`; now picks the Sunday GP by taking the latest
+  session within 1 day of the FastF1 `EventDate`
+- DNS statuses (`'Did not start'`, `'Did not qualify'`, `'Withdrew'`) now set
+  `finish_position=None` rather than inheriting a classified position
+- `is_sprint_weekend` flag added to all result rows in both notebooks
+
+### Data
+
+- 2022–2025 baseline corrected: 92 races, 1838 entries (up from 74/1478)
+- 2026: 3 rounds loaded (Australia, China, Japan); sprint weekend flagged (China)
+- Race control summary printed at load time for both datasets
 
 ---
 

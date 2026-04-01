@@ -9,12 +9,13 @@ Positive delta = gained positions in the race. Negative = lost positions.
 import pandas as pd
 
 
-def position_delta(grid: int, finish: int | None) -> int | None:
+def position_delta(grid: int | None, finish: int | None) -> int | None:
     """Return positions gained in the race (positive = gained, negative = lost).
 
-    Returns None if the driver did not finish (no classified position).
+    Returns None if the driver did not finish or if grid position is unknown
+    (e.g. loaded via OpenF1 fallback where grid data is unavailable).
     """
-    if finish is None:
+    if grid is None or finish is None:
         return None
     return grid - finish
 
@@ -34,7 +35,8 @@ def quali_race_delta(results_df: pd.DataFrame) -> pd.DataFrame:
     """
     df = results_df.copy()
     df["dnf"] = df["status"].apply(
-        lambda s: s not in {"Finished", "+1 Lap", "+2 Laps", "+3 Laps", "+4 Laps", "+5 Laps"}
+        lambda s: s not in ("Finished", "Lapped")
+        and not (s.startswith("+") and "Lap" in s)
     )
     df["delta"] = df.apply(
         lambda row: position_delta(row["grid_position"], row["finish_position"]),

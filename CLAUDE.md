@@ -157,7 +157,17 @@ This ensures consistent grouping across all analyses.
 
 ## Getting Started
 
-1. `pip install -r requirements.txt`
+1. `python -m pip install -r requirements.txt`
 2. Run tests: `python -m pytest tests/ -v`
-3. Check BACKLOG.md for current work
-4. FastF1 first-run will populate the cache — expect slow initial loads
+3. Launch notebooks: `python -m jupyterlab`
+4. Check BACKLOG.md for current work
+5. FastF1 first-run will populate the cache — expect slow initial loads
+
+### Windows note
+
+Packages are installed to the user AppData location, so pip-installed scripts
+are not on PATH. Always use `python -m <tool>` — never bare commands:
+
+- `python -m jupyterlab` — NOT `jupyter lab`
+- `python -m pytest tests/ -v` — NOT `pytest tests/ -v`
+- `python -m pip install ...` — NOT `pip install ...`

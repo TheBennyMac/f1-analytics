@@ -55,6 +55,18 @@ class TestQualiRaceDelta:
         sai = result[result["driver_id"] == "SAI"].iloc[0]
         assert sai["dnf"] == False
 
+    def test_lapped_status_is_not_dnf(self):
+        # FastF1 2026+ uses 'Lapped' instead of '+N Lap(s)' — must not be DNF
+        df = pd.DataFrame([{
+            "season": 2026, "round": 1, "race_name": "Australian GP",
+            "driver_id": "SAI", "driver_name": "Sainz",
+            "constructor_id": "williams",
+            "grid_position": 17, "finish_position": 9, "status": "Lapped",
+        }])
+        result = quali_race_delta(df)
+        assert result.iloc[0]["dnf"] == False
+        assert result.iloc[0]["delta"] == 8
+
 
 class TestMeanDeltaByDriver:
     def test_excludes_dnfs(self):
