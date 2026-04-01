@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.2.0 (2022 Era Baseline)
+## Current Version: v0.3.0 (2026 Era: First Data)
 
 ### Scope Decision (2026-03-31)
 
@@ -27,14 +27,15 @@
 - [x] Quali position vs race finishing position consistency
 - [x] Notebook: `notebooks/01_2022_era_baseline.ipynb`
 
-## Must Have (v0.3.0 — 2026 Era: First Data)
+## Must Have (v0.3.0 — 2026 Era: First Data) ✅ Released 2026-04-01
 
-- [ ] Ingest completed 2026 races: Australia, China, Japan (rounds 1–3)
-- [ ] Ingest 2026 season results as they arrive (Miami onward)
-- [ ] Note: Bahrain and Saudi Arabia (Middle East rounds, April 2026) cancelled due to regional conflict
-- [ ] Year 1 convergence: 2026 vs 2022 on same metrics
-- [ ] Like-for-like team/driver comparison across the regulation reset
-- [ ] Notebook: `notebooks/02_2026_era_year1.ipynb`
+- [x] Ingest completed 2026 races: Australia, China, Japan (rounds 1–3)
+- [x] Ingest 2026 season results as they arrive (Miami onward) — notebook is re-runnable
+- [x] Note: Bahrain and Saudi Arabia (Middle East rounds, April 2026) cancelled due to regional conflict
+- [x] Year 1 convergence: 2026 vs 2022 on same metrics
+- [x] Like-for-like team/driver comparison across the regulation reset
+- [x] Race control flags (SC, VSC, red flag) per race in both datasets
+- [x] Notebook: `notebooks/02_2026_era_year1.ipynb`
 
 ## Should Have (v0.4.0 — Deeper Pace Analysis)
 
@@ -91,12 +92,22 @@
 - [ ] "Ferrari always bottles it" — championship lead conversion rate
 - [ ] "Monaco produces processional races" — overtake index by circuit
 - [ ] "Safety car lottery" — SC frequency and position change correlation
+  - Extend `had_sc`/`had_vsc`/`had_red_flag` booleans to deployment counts
+    per race (a race with two SCs is materially different to one with one)
+  - Count distinct deployment events from `race_control_messages` per session
 - [ ] "DRS made overtaking artificial" — overtake index pre/post DRS
 - [ ] "Sprints are only exciting before the tyre stops" — compare lap
     time deltas and position changes in first vs second half of sprint
     races; test whether 2026 observation holds across the era
 - [ ] "Turn 1 chaos is worse in regulation reset years" — compare
     first-lap incidents and retirements in Year 1 vs Year 2+ of each era
+- [ ] DNF cause categorisation — group FastF1 status values into:
+    Mechanical (Engine, Gearbox, Hydraulics, Power Unit etc.),
+    Chassis/Collision (Accident, Collision, Collision damage),
+    Administrative (Disqualified, Did not start, Withdrew),
+    Unknown (Retired — flag but exclude from percentage breakdowns)
+  - Test whether regulation reset years skew more mechanical than
+    settled era years — new parts under development stress
 - [ ] Notebook: `notebooks/04_narrative_testing.ipynb`
 
 ## Could Have (v0.6.0 — UI / Publishing)
@@ -116,7 +127,9 @@
 
 ## Completed
 
+- [x] v0.3.0 2026 Year 1: 3 rounds ingested, four metrics, like-for-like 2022
+  comparison, race control flags
 - [x] v0.2.0 Baseline: points spread, lap time delta, DNF rates,
-  quali->race conversion, 74 races 1478 entries
+  quali->race conversion, 92 races 1838 entries
 - [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models, era helper, tests, validation notebook
 - [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills, docs, PR template, CHANGELOG
