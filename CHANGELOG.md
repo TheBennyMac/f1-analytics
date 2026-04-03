@@ -13,6 +13,40 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- `src/analysis/sector_times.py` — sector time breakdown:
+  - `best_sector_times()` — best S1/S2/S3 per driver per session (pit laps excluded)
+  - `sector_gap()` — P1-Pn gap per sector for a single race
+  - `sector_gap_summary()` — aggregate sector gaps across multiple races
+  - `mean_sector_gap_by_season()` — season-level mean sector gap
+- `src/analysis/tyre_strategy.py` — tyre compound strategy:
+  - `stints_from_laps()` — stint-level data (driver, team, compound, laps) from FastF1 laps
+  - `strategy_summary()` — compounds used and number of stops per driver per race
+  - `mean_stint_length()` — mean stint length per compound across a race
+  - `compound_usage_by_constructor()` — compound usage aggregated across multiple races
+- `src/analysis/field_spread.py` — field normalisation, P11, tail-of-field:
+  - `p1_to_pn_gap_normalised()` — P1-Pn gap with attrition races flagged
+    (emits a row for every race; `sufficient=False` where field < n)
+  - `p11_gap_per_race()` — P10-P11 and P1-P11 lap time gaps per race
+  - `tail_gap_analysis()` — last-classified-driver gap to P1 and P10 per race
+- `src/analysis/sprint_analysis.py` — sprint race analysis:
+  - `sprint_position_changes()` — positions gained/lost per driver in a sprint
+  - `sprint_vs_race_pace()` — median sprint vs full race lap pace per driver
+  - `flag_sprint_weekends()` — deduplicated sprint weekend flags from results data
+- `src/analysis/pit_window.py` — pre/post pit window analysis:
+  - `median_pit_lap()` — median first pit stop lap across all drivers
+  - `lap_time_deltas_by_phase()` — mean P1-P5 per-lap gap before/after split lap
+  - `pit_window_summary()` — pre/post pit window phase metrics across multiple races
+- `src/analysis/__init__.py` — all new modules exported to public API
+- `tests/test_sector_times.py` — 13 tests
+- `tests/test_tyre_strategy.py` — 13 tests
+- `tests/test_field_spread.py` — 14 tests
+- `tests/test_sprint_analysis.py` — 13 tests
+- `tests/test_pit_window.py` — 12 tests
+- `notebooks/03_pace_and_strategy.ipynb` — 14 new sections added (sections 8–14):
+  - Race results loading cell (lightweight; used for quali-race delta)
+  - Race laps loading cell (heavy; used for all lap-level analyses)
+  - Sections 8–14 covering all remaining v0.4.0 analyses
+
 - `src/analysis/intra_team.py` — intra-team qualifying gap analysis:
   - `prepare_quali_results()` — normalises FastF1 qualifying session results
   - `teammate_quali_gaps()` — gap (seconds + %) per constructor per race
