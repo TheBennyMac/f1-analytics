@@ -9,6 +9,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.4.0] — 2026-04-03
+
+### Added
+
+- `src/analysis/intra_team.py` — intra-team qualifying gap analysis:
+  - `prepare_quali_results()` — normalises FastF1 qualifying session results
+  - `teammate_quali_gaps()` — gap (seconds + %) per constructor per race
+  - `season_teammate_gaps()` — aggregates across multiple races
+  - `mean_gap_by_constructor()` — season-level mean gap, sorted closest first
+  - `driver_dominance()` — how often each driver outqualified their teammate;
+    `min_races` filter to exclude replacement/one-off drivers
+- `src/analysis/__init__.py` — intra_team module exported to public API
+- `tests/test_intra_team.py` — 23 tests covering all functions (87 total, all passing)
+- `notebooks/03_pace_and_strategy.ipynb` — intra-team driver comparison notebook:
+  - 2022 Y1 mean qualifying gap by constructor (22 rounds)
+  - 2026 Y1 mean qualifying gap by constructor (3 rounds: Australia, China, Japan)
+  - Driver dominance: who outqualified their teammate more often (2022 Y1)
+  - Field-wide mean and median gap comparison: 2022 Y1 vs 2026 Y1
+  - Gap distribution boxplot across both eras
+  - Like-for-like constructor comparison across the regulation reset
+  - Auto-populated summary table (re-runs update automatically)
+
+### Analysis
+
+- Field-wide mean intra-team qualifying gap: 0.816s (2022 Y1) vs 0.349s (2026 Y1)
+- Field-wide median gap: 0.350s (2022 Y1) vs 0.276s (2026 Y1)
+- 2026 figures directional only — 3 rounds; will mature across the season
+- Every like-for-like constructor showed a tighter teammate gap in
+  2026 Y1 vs 2022 Y1
+- 2022 standouts: ALB (Williams, 95%), NOR (McLaren, 90.9%), VER (Red Bull, 81.8%)
+
+---
+
 ## [v0.3.0] — 2026-04-01
 
 ### Added

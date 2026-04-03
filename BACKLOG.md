@@ -37,12 +37,12 @@
 - [x] Race control flags (SC, VSC, red flag) per race in both datasets
 - [x] Notebook: `notebooks/02_2026_era_year1.ipynb`
 
-## Should Have (v0.4.0 — Deeper Pace Analysis)
+## Should Have (v0.4.0 — Deeper Pace Analysis) ✅ Released 2026-04-03
 
 - [ ] Sector time breakdown (FastF1, 2022+)
 - [ ] Tyre compound strategy by team across eras
 - [ ] Quali-to-race pace delta: who converts, who doesn't
-- [ ] Intra-team driver comparison: who adapts better to a regulation reset?
+- [x] Intra-team driver comparison: who adapts better to a regulation reset?
   - Same constructor, same car — isolates driver factor from machinery
   - **Primary metric: qualifying gap between teammates** — purest driver
     comparison, eliminates strategy, traffic, and luck as variables
@@ -85,7 +85,7 @@
     removing pit strategy produce closer racing?
   - Test whether this pattern is consistent across eras or specific
     to 2026 tyre characteristics
-- [ ] Notebook: `notebooks/03_pace_and_strategy.ipynb`
+- [x] Notebook: `notebooks/03_pace_and_strategy.ipynb`
 
 ## Should Have (v0.5.0 — Narrative Testing)
 
