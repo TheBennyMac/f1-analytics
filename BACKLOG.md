@@ -4,9 +4,12 @@
 
 ### Scope Decision (2026-03-31)
 
-- **Primary focus**: 2022 Ground Effect Era (2022–2025) vs 2026 Era — direct comparison
-- **Output**: Jupyter notebooks first; UI tooling decided later based on what the analysis needs
-- **2026 data**: Matures race by race — completed rounds: Australia, China, Japan; next: Miami GP (~May 2026)
+- **Primary focus**: 2022 Ground Effect Era (2022–2025) vs 2026 Era —
+  direct comparison
+- **Output**: Jupyter notebooks first; UI tooling decided later based
+  on what the analysis needs
+- **2026 data**: Matures race by race — completed rounds: Australia,
+  China, Japan; next: Miami GP (~May 2026)
 
 ---
 
@@ -14,8 +17,10 @@
 
 - [x] FastF1 data loader with caching (`src/data/fastf1_loader.py`)
 - [x] OpenF1 client for results and standings (`src/data/openf1_client.py`)
-- [x] Core data models: `RaceResult`, `LapSummary`, `DriverStanding`, `ConstructorStanding`
-- [x] Era helper utility: year → era name + year-within-era (`src/utils/era_helper.py`)
+- [x] Core data models: `RaceResult`, `LapSummary`, `DriverStanding`,
+  `ConstructorStanding`
+- [x] Era helper utility: year → era name + year-within-era
+  (`src/utils/era_helper.py`)
 - [x] Basic test suite covering models and era helper (21 tests passing)
 - [x] Notebook: `notebooks/00_data_validation.ipynb` — confirmed end-to-end
 
@@ -30,8 +35,10 @@
 ## Must Have (v0.3.0 — 2026 Era: First Data) ✅ Released 2026-04-01
 
 - [x] Ingest completed 2026 races: Australia, China, Japan (rounds 1–3)
-- [x] Ingest 2026 season results as they arrive (Miami onward) — notebook is re-runnable
-- [x] Note: Bahrain and Saudi Arabia (Middle East rounds, April 2026) cancelled due to regional conflict
+- [x] Ingest 2026 season results as they arrive (Miami onward) —
+  notebook is re-runnable
+- [x] Note: Bahrain and Saudi Arabia (Middle East rounds, April 2026)
+  cancelled due to regional conflict
 - [x] Year 1 convergence: 2026 vs 2022 on same metrics
 - [x] Like-for-like team/driver comparison across the regulation reset
 - [x] Race control flags (SC, VSC, red flag) per race in both datasets
@@ -129,5 +136,7 @@
   comparison, race control flags
 - [x] v0.2.0 Baseline: points spread, lap time delta, DNF rates,
   quali->race conversion, 92 races 1838 entries
-- [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models, era helper, tests, validation notebook
-- [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills, docs, PR template, CHANGELOG
+- [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models,
+  era helper, tests, validation notebook
+- [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills,
+  docs, PR template, CHANGELOG
