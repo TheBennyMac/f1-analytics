@@ -4,9 +4,12 @@
 
 ### Scope Decision (2026-03-31)
 
-- **Primary focus**: 2022 Ground Effect Era (2022–2025) vs 2026 Era — direct comparison
-- **Output**: Jupyter notebooks first; UI tooling decided later based on what the analysis needs
-- **2026 data**: Matures race by race — completed rounds: Australia, China, Japan; next: Miami GP (~May 2026)
+- **Primary focus**: 2022 Ground Effect Era (2022–2025) vs 2026 Era —
+  direct comparison
+- **Output**: Jupyter notebooks first; UI tooling decided later based
+  on what the analysis needs
+- **2026 data**: Matures race by race — completed rounds: Australia,
+  China, Japan; next: Miami GP (~May 2026)
 
 ---
 
@@ -14,8 +17,10 @@
 
 - [x] FastF1 data loader with caching (`src/data/fastf1_loader.py`)
 - [x] OpenF1 client for results and standings (`src/data/openf1_client.py`)
-- [x] Core data models: `RaceResult`, `LapSummary`, `DriverStanding`, `ConstructorStanding`
-- [x] Era helper utility: year → era name + year-within-era (`src/utils/era_helper.py`)
+- [x] Core data models: `RaceResult`, `LapSummary`, `DriverStanding`,
+  `ConstructorStanding`
+- [x] Era helper utility: year → era name + year-within-era
+  (`src/utils/era_helper.py`)
 - [x] Basic test suite covering models and era helper (21 tests passing)
 - [x] Notebook: `notebooks/00_data_validation.ipynb` — confirmed end-to-end
 
@@ -30,8 +35,10 @@
 ## Must Have (v0.3.0 — 2026 Era: First Data) ✅ Released 2026-04-01
 
 - [x] Ingest completed 2026 races: Australia, China, Japan (rounds 1–3)
-- [x] Ingest 2026 season results as they arrive (Miami onward) — notebook is re-runnable
-- [x] Note: Bahrain and Saudi Arabia (Middle East rounds, April 2026) cancelled due to regional conflict
+- [x] Ingest 2026 season results as they arrive (Miami onward) —
+  notebook is re-runnable
+- [x] Note: Bahrain and Saudi Arabia (Middle East rounds, April 2026)
+  cancelled due to regional conflict
 - [x] Year 1 convergence: 2026 vs 2022 on same metrics
 - [x] Like-for-like team/driver comparison across the regulation reset
 - [x] Race control flags (SC, VSC, red flag) per race in both datasets
@@ -39,9 +46,9 @@
 
 ## Should Have (v0.4.0 — Deeper Pace Analysis) ✅ Released 2026-04-03
 
-- [ ] Sector time breakdown (FastF1, 2022+)
-- [ ] Tyre compound strategy by team across eras
-- [ ] Quali-to-race pace delta: who converts, who doesn't
+- [x] Sector time breakdown (FastF1, 2022+)
+- [x] Tyre compound strategy by team across eras
+- [x] Quali-to-race pace delta: who converts, who doesn't
 - [x] Intra-team driver comparison: who adapts better to a regulation reset?
   - Same constructor, same car — isolates driver factor from machinery
   - **Primary metric: qualifying gap between teammates** — purest driver
@@ -50,32 +57,30 @@
   - Also track: DNF rate, tyre degradation handling
   - Primary lens: 2026 Year 1 vs 2022 Year 1 (regulation reset comparison)
   - Exclude races with mechanical DNFs to keep the comparison clean
-- [ ] Field size normalisation for convergence comparisons
+- [x] Field size normalisation for convergence comparisons
   - Cap field comparisons at the lowest classified finisher count across
     the races being compared (e.g. 12 finishers in 2022 Melbourne)
   - Offer fixed P1–P10 as primary view; normalised field as secondary
   - Flag attrition races clearly so gaps aren't misread as pace gaps
-- [ ] Points boundary and P11 analysis
+- [x] Points boundary and P11 analysis
   - Gap from P10 to P11 per race — how arbitrary is the points cut?
   - P11 gap to P1 as an alternative field spread metric
-  - "Near-miss points" frequency: how often does P11 finish within 5s
-    of P10 across an era?
   - Connects to intra-team analysis: quali P9 but finish P11 is a
     different story to quali P14 and race to P11
-- [ ] Tail-of-field gap analysis (classified finishers only)
+- [x] Tail-of-field gap analysis (classified finishers only)
   - For drivers outside the points, track gap to race leader and to P10
     per race — how far behind is the back of the grid?
   - Only include drivers who completed the race distance
   - Useful for measuring whether regulation resets compress or stretch
     the full field, not just the front runners
-- [ ] Sprint race analysis
+- [x] Sprint race analysis
   - Load sprint sessions alongside race sessions (`session_type='S'`)
   - Compare sprint vs full race pace for same drivers on same weekend
   - Track position changes: sprint vs full race
   - Note: sprints have no mandatory pit stop — most cars finish on
     original tyres, making them a useful pit-stop-free baseline
   - Flag sprint weekends separately in all convergence metrics
-- [ ] Pre vs post pit window excitement in full-length Grand Prix
+- [x] Pre vs post pit window excitement in full-length Grand Prix
   - **2026 observation to test:** first half to two-thirds of the full
     race (before the main pit window) appears more competitive than
     the post-stop phase, where fresh tyres spread the field
@@ -131,5 +136,7 @@
   comparison, race control flags
 - [x] v0.2.0 Baseline: points spread, lap time delta, DNF rates,
   quali->race conversion, 92 races 1838 entries
-- [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models, era helper, tests, validation notebook
-- [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills, docs, PR template, CHANGELOG
+- [x] v0.1.0 Foundation: FastF1 loader, OpenF1 client, data models,
+  era helper, tests, validation notebook
+- [x] Project scaffolding, CLAUDE.md, BACKLOG.md, hooks, skills,
+  docs, PR template, CHANGELOG
