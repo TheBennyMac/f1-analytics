@@ -163,6 +163,62 @@ Same circuit is the primary comparison basis. Year-within-era position is the se
 - Circuits that appear in both eras (Bahrain, Australia, etc.) are the strongest comparison points
 - New circuits on the 2026 calendar have no direct baseline equivalent — flag these clearly in analysis
 
+---
+
+## ADR-007: FastF1 pit lap column convention
+
+**Date:** 2026-04-04
+**Status:** Accepted
+
+### Context
+
+Analysis modules that exclude pit-in and pit-out laps were written
+against a boolean `PitInLap`/`PitOutLap` convention. FastF1's actual
+laps DataFrame provides `PitInTime`/`PitOutTime` (nullable timestamps):
+non-null means a pit event occurred on that lap; `NaT` means it did not.
+
+Because the boolean columns are never present in real FastF1 data, the
+filtering was silently skipped. For `pit_window.py` this caused a hard
+failure (returned `None` for every race → empty summary → "Insufficient
+data" chart). For `tyre_strategy.py`, pit-in/out laps were included in
+stint lap counts, inflating counts by one per stop. For
+`lap_time_delta.py`, `sector_times.py`, and `sprint_analysis.py`, the
+`IsAccurate` filter provided accidental protection.
+
+### Decision
+
+All analysis modules that filter pit laps must support both column formats:
+
+```python
+if "PitOutLap" in df.columns:          # boolean test data
+    df = df[~df["PitOutLap"].fillna(False)]
+elif "PitOutTime" in df.columns:       # FastF1 native
+    df = df[df["PitOutTime"].isna()]
+if "PitInLap" in df.columns:
+    df = df[~df["PitInLap"].fillna(False)]
+elif "PitInTime" in df.columns:
+    df = df[df["PitInTime"].isna()]
+```
+
+Each affected module must have a test covering the `PitInTime`/`PitOutTime` path.
+
+### Rationale
+
+- Boolean columns are convenient for unit tests and must continue to work
+- FastF1 native timestamps are what real data provides — modules must
+  not silently skip pit filtering
+- The `elif` pattern ensures one format does not shadow the other
+
+### Consequences
+
+- Any new analysis module that filters pit laps must apply this
+  dual-format pattern
+- Test fixtures may use either format; FastF1-format tests must exist
+  for modules without an `IsAccurate` fallback
+- Docstrings should note both accepted column formats
+
+---
+
 ### 2026-specific context
 
 - Melbourne 2025 was rain-affected — flag when used as a baseline comparator for 2026 Australia

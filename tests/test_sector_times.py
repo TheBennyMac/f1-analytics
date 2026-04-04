@@ -72,6 +72,22 @@ class TestBestSectorTimes:
         result = best_sector_times(laps)
         assert result.iloc[0]["best_s1_s"] == pytest.approx(30.0)
 
+    def test_fastf1_pit_time_columns_exclude_pit_laps(self):
+        """FastF1 native format: PitOutTime/PitInTime timestamps; NaT = clean lap."""
+        rows = [
+            {"Driver": "VER", "Sector1Time": timedelta(seconds=25.0),
+             "Sector2Time": timedelta(seconds=35.0), "Sector3Time": timedelta(seconds=15.0),
+             "PitOutTime": pd.Timestamp("2022-01-01 01:00:00"), "PitInTime": pd.NaT},
+            {"Driver": "VER", "Sector1Time": timedelta(seconds=30.0),
+             "Sector2Time": timedelta(seconds=40.0), "Sector3Time": timedelta(seconds=20.0),
+             "PitOutTime": pd.NaT, "PitInTime": pd.NaT},
+        ]
+        laps = pd.DataFrame(rows)
+        for col in ("Sector1Time", "Sector2Time", "Sector3Time"):
+            laps[col] = pd.to_timedelta(laps[col])
+        result = best_sector_times(laps)
+        assert result.iloc[0]["best_s1_s"] == pytest.approx(30.0)
+
     def test_raises_on_missing_sector_column(self):
         laps = pd.DataFrame([{"Driver": "VER", "Sector1Time": timedelta(seconds=30.0)}])
         laps["Sector1Time"] = pd.to_timedelta(laps["Sector1Time"])

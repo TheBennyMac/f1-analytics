@@ -59,6 +59,22 @@ class TestMedianPitLap:
         result = median_pit_lap(laps)
         assert result is None
 
+    def test_fastf1_pit_in_time_columns(self):
+        """FastF1 native format: PitInTime/PitOutTime are timestamps, not booleans."""
+        rows = []
+        for driver in ["VER", "LEC", "HAM", "SAI", "RUS"]:
+            for lap in range(1, 31):
+                rows.append({
+                    "Driver": driver,
+                    "LapNumber": lap,
+                    "LapTime": timedelta(seconds=90.0),
+                    "PitInTime": pd.Timestamp("2022-01-01 01:00:00") if lap == 15 else pd.NaT,
+                    "PitOutTime": pd.Timestamp("2022-01-01 01:02:00") if lap == 16 else pd.NaT,
+                })
+        laps = pd.DataFrame(rows)
+        result = median_pit_lap(laps)
+        assert result == pytest.approx(15.0)
+
     def test_uses_first_stop_per_driver(self):
         # VER pits on lap 10, LEC on lap 20 — median should be 15
         rows = [

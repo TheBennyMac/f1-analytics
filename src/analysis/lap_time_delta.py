@@ -14,7 +14,9 @@ def fastest_lap_per_driver(laps_df: pd.DataFrame) -> pd.DataFrame:
 
     Args:
         laps_df: FastF1 laps DataFrame. Must contain columns:
-                 ['Driver', 'LapTime', 'PitOutLap', 'PitInLap'].
+                 ['Driver', 'LapTime'].
+                 Pit columns: PitOutLap/PitInLap (boolean) or PitOutTime/PitInTime
+                 (FastF1 native timestamps) — either format is accepted.
 
     Returns:
         DataFrame with columns [driver, fastest_lap_s], sorted fastest first.
@@ -25,8 +27,12 @@ def fastest_lap_per_driver(laps_df: pd.DataFrame) -> pd.DataFrame:
     # Exclude pit in/out laps and laps with no recorded time
     if "PitOutLap" in clean.columns:
         clean = clean[~clean["PitOutLap"].fillna(False)]
+    elif "PitOutTime" in clean.columns:
+        clean = clean[clean["PitOutTime"].isna()]
     if "PitInLap" in clean.columns:
         clean = clean[~clean["PitInLap"].fillna(False)]
+    elif "PitInTime" in clean.columns:
+        clean = clean[clean["PitInTime"].isna()]
     # Exclude laps flagged as inaccurate by FastF1 — these include SC/VSC laps
     # where drivers are not pushing, which would distort the pace comparison.
     if "IsAccurate" in clean.columns:

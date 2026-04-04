@@ -66,8 +66,12 @@ def sprint_vs_race_pace(
         clean = laps_df.copy()
         if "PitOutLap" in clean.columns:
             clean = clean[~clean["PitOutLap"].fillna(False)]
+        elif "PitOutTime" in clean.columns:
+            clean = clean[clean["PitOutTime"].isna()]
         if "PitInLap" in clean.columns:
             clean = clean[~clean["PitInLap"].fillna(False)]
+        elif "PitInTime" in clean.columns:
+            clean = clean[clean["PitInTime"].isna()]
         if "IsAccurate" in clean.columns:
             clean = clean[clean["IsAccurate"].fillna(False)]
         clean = clean.dropna(subset=["LapTime"])

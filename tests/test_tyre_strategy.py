@@ -64,6 +64,26 @@ class TestStintsFromLaps:
         result = stints_from_laps(pd.DataFrame(rows))
         assert len(result) == 0
 
+    def test_fastf1_pit_time_columns_exclude_pit_laps(self):
+        """FastF1 native format: PitInTime/PitOutTime timestamps; NaT = clean lap.
+        tyre_strategy has no IsAccurate fallback, so this is the only guard."""
+        rows = []
+        for lap in range(1, 11):
+            rows.append({"Driver": "VER", "Team": "Red Bull", "Stint": 1,
+                         "Compound": "SOFT", "LapNumber": lap,
+                         "PitInTime": pd.Timestamp("2022-01-01") if lap == 10 else pd.NaT,
+                         "PitOutTime": pd.NaT})
+        for lap in range(11, 21):
+            rows.append({"Driver": "VER", "Team": "Red Bull", "Stint": 2,
+                         "Compound": "MEDIUM", "LapNumber": lap,
+                         "PitInTime": pd.NaT,
+                         "PitOutTime": pd.Timestamp("2022-01-01") if lap == 11 else pd.NaT})
+        result = stints_from_laps(pd.DataFrame(rows))
+        ver_s1 = result[(result["driver"] == "VER") & (result["stint"] == 1)]
+        assert ver_s1.iloc[0]["laps"] == 9  # pit-in lap on lap 10 excluded
+        ver_s2 = result[(result["driver"] == "VER") & (result["stint"] == 2)]
+        assert ver_s2.iloc[0]["laps"] == 9  # pit-out lap on lap 11 excluded
+
     def test_raises_on_missing_columns(self):
         with pytest.raises(ValueError, match="Missing columns"):
             stints_from_laps(pd.DataFrame([{"Driver": "VER"}]))

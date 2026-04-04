@@ -17,7 +17,8 @@ def best_sector_times(laps_df: pd.DataFrame) -> pd.DataFrame:
     Args:
         laps_df: FastF1 laps DataFrame. Expected columns:
                  ['Driver', 'Sector1Time', 'Sector2Time', 'Sector3Time'].
-                 Optional: ['IsAccurate', 'PitOutLap', 'PitInLap'].
+                 Optional: ['IsAccurate']. Pit columns: PitOutLap/PitInLap
+                 (boolean) or PitOutTime/PitInTime (FastF1 native timestamps).
 
     Returns:
         DataFrame with columns [driver, best_s1_s, best_s2_s, best_s3_s],
@@ -33,8 +34,12 @@ def best_sector_times(laps_df: pd.DataFrame) -> pd.DataFrame:
     clean = laps_df.copy()
     if "PitOutLap" in clean.columns:
         clean = clean[~clean["PitOutLap"].fillna(False)]
+    elif "PitOutTime" in clean.columns:
+        clean = clean[clean["PitOutTime"].isna()]
     if "PitInLap" in clean.columns:
         clean = clean[~clean["PitInLap"].fillna(False)]
+    elif "PitInTime" in clean.columns:
+        clean = clean[clean["PitInTime"].isna()]
     if "IsAccurate" in clean.columns:
         clean = clean[clean["IsAccurate"].fillna(False)]
 

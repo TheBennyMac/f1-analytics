@@ -41,6 +41,17 @@ class TestFastestLapPerDriver:
         result = fastest_lap_per_driver(pd.DataFrame(rows))
         assert result.iloc[0]["fastest_lap_s"] == pytest.approx(90.0)
 
+    def test_fastf1_pit_time_columns_exclude_pit_laps(self):
+        """FastF1 native format: PitInTime/PitOutTime are timestamps; NaT = clean lap."""
+        rows = [
+            {"Driver": "VER", "LapTime": timedelta(seconds=85.0),
+             "PitOutTime": pd.Timestamp("2022-01-01 01:00:00"), "PitInTime": pd.NaT},
+            {"Driver": "VER", "LapTime": timedelta(seconds=90.0),
+             "PitOutTime": pd.NaT, "PitInTime": pd.NaT},
+        ]
+        result = fastest_lap_per_driver(pd.DataFrame(rows))
+        assert result.iloc[0]["fastest_lap_s"] == pytest.approx(90.0)
+
 
 class TestP1ToPnGap:
     def test_gap_calculated_correctly(self):
