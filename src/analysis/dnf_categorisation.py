@@ -29,6 +29,7 @@ _MECHANICAL: set[str] = {
     "Wheel", "Tyre", "Puncture", "Alternator", "Pneumatics",
     "Fire", "Differential", "Cooling system", "Damage",
     "Radiator", "Exhaust pipe",
+    "Undertray", "Water pump", "Front wing", "Power loss", "Fuel pump",
 }
 
 _COLLISION: set[str] = {
@@ -38,10 +39,6 @@ _COLLISION: set[str] = {
 _ADMINISTRATIVE: set[str] = {
     "Disqualified", "Did not start", "Did not qualify",
     "Withdrew", "Safety concerns", "Excluded",
-}
-
-_UNKNOWN: set[str] = {
-    "Retired",
 }
 
 # Category label constants
