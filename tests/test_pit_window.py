@@ -93,8 +93,8 @@ class TestLapTimeDeltasByPhase:
         assert result["post_laps"] > 0
 
     def test_none_when_phase_has_insufficient_drivers(self):
-        # Only 3 drivers — P1-P5 gap requires 5; should return None
-        laps = _make_race_laps(["VER", "LEC", "HAM"], total_laps=30, pit_lap=15)
+        # Only 2 drivers — P1-P3 gap requires 3; should return None
+        laps = _make_race_laps(["VER", "LEC"], total_laps=30, pit_lap=15)
         result = lap_time_deltas_by_phase(laps, split_lap=15.0)
         assert result["pre_mean_gap_s"] is None
         assert result["post_mean_gap_s"] is None
