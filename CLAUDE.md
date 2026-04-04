@@ -19,7 +19,7 @@ An F1 data analytics project focused on surfacing objective insights from histor
 - **UI tooling is undecided** — do not assume Streamlit or any specific framework. When visualisation is needed, evaluate the most appropriate tool at that point. Keep all analysis code completely decoupled from any presentation layer.
 - **2026 season is live and unfolding** — datasets will mature race by race. Design data loaders to be re-runnable as new sessions become available.
 
-### 2026 Season Context (as of 2026-03-31)
+### 2026 Season Context (as of 2026-04-04)
 
 - Completed rounds: Australia (R1), China (R2), Japan (R3)
 - Bahrain and Saudi Arabia (Middle East rounds, April 2026) cancelled due to regional conflict

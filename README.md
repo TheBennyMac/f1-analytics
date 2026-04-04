@@ -29,8 +29,10 @@ data/cache/   # FastF1 local cache (gitignored)
 
 ## Data Sources
 
-- **FastF1** — session data from ~2018 onward (lap times, telemetry, tyre compounds)
-- **Historical API** — results and standings back to 1950 (era-level statistics)
+- **FastF1** — session data from ~2018 onward (lap times, telemetry,
+  tyre compounds, sector times)
+- **OpenF1** — results and standings from 2023 onward (cross-check
+  and supplementary data)
 
 ## Development
 
