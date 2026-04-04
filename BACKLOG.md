@@ -94,7 +94,14 @@
 
 ## Should Have (v0.5.0 — Narrative Testing)
 
-- [ ] "Ferrari always bottles it" — championship lead conversion rate
+- [ ] "Ferrari always bottles it" — within-season points trajectory analysis
+  - Original hypothesis (championship lead conversion rate) requires
+    historical data beyond our 2022–2026 scope; deferred — see v0.7.0
+  - Reframed for available data: in seasons where Ferrari was competitive
+    (2022, 2024), track cumulative points gap to the eventual champion
+    round by round — when does the gap open up and why?
+  - Identify the inflection point where Ferrari's title challenge falters
+  - Compare trajectory to other competitive constructors in the same seasons
 - [ ] "Monaco produces processional races" — overtake index by circuit
 - [ ] "Safety car lottery" — SC frequency and position change correlation
   - Extend `had_sc`/`had_vsc`/`had_red_flag` booleans to deployment counts
@@ -129,6 +136,15 @@
     source (e.g. motorsport-reference.com race reports)
 - [x] Notebook: `notebooks/04_narrative_testing.ipynb` — created,
   DNF section complete with findings documented
+
+## Could Have (v0.7.0 — Historical Era Analysis)
+
+- [ ] "Ferrari always bottles it" — championship lead conversion rate
+  - Requires historical data beyond 2022 (2012, 2017, 2018 are key seasons)
+  - Revisit once a pre-2022 data source is integrated (Ergast or equivalent)
+  - Measure: of seasons where Ferrari led the championship at any point,
+    what % did they convert to a title?
+  - Compare against other constructors for the same metric
 
 ## Could Have (v0.6.0 — UI / Publishing)
 

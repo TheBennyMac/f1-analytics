@@ -61,6 +61,12 @@ from src.analysis.dnf_categorisation import (
     dnf_category_counts,
     mechanical_share_by_era_year,
 )
+from src.analysis.championship_trajectory import (
+    cumulative_constructor_points,
+    points_gap_to_leader,
+    constructor_trajectory,
+    gap_inflection_round,
+)
 
 __all__ = [
     "gini_coefficient", "points_gini_by_round", "points_gap_by_round", "season_end_gini",
@@ -75,4 +81,6 @@ __all__ = [
     "sprint_position_changes", "sprint_vs_race_pace", "flag_sprint_weekends",
     "median_pit_lap", "lap_time_deltas_by_phase", "pit_window_summary",
     "categorise_dnf", "dnf_category_counts", "mechanical_share_by_era_year",
+    "cumulative_constructor_points", "points_gap_to_leader",
+    "constructor_trajectory", "gap_inflection_round",
 ]

@@ -87,6 +87,21 @@ class TestSprintVsRacePace:
         result = sprint_vs_race_pace(sprint, race)
         assert set(result["driver"]) == {"VER"}
 
+    def test_fastf1_pit_time_columns_exclude_pit_laps(self):
+        """FastF1 native format: PitOutTime/PitInTime timestamps; NaT = clean lap."""
+        sprint = pd.DataFrame([
+            {"Driver": "VER", "LapTime": timedelta(seconds=70.0),
+             "PitOutTime": pd.NaT, "PitInTime": pd.NaT},
+        ])
+        race = pd.DataFrame([
+            {"Driver": "VER", "LapTime": timedelta(seconds=90.0),
+             "PitOutTime": pd.Timestamp("2022-01-01"), "PitInTime": pd.NaT},  # pit-out lap
+            {"Driver": "VER", "LapTime": timedelta(seconds=92.0),
+             "PitOutTime": pd.NaT, "PitInTime": pd.NaT},
+        ])
+        result = sprint_vs_race_pace(sprint, race)
+        assert result.iloc[0]["race_median_s"] == pytest.approx(92.0)
+
     def test_empty_when_no_common_drivers(self):
         sprint = _make_laps([("VER", 90.0)])
         race = _make_laps([("LEC", 91.0)])

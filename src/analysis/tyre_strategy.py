@@ -21,7 +21,8 @@ def stints_from_laps(laps_df: pd.DataFrame) -> pd.DataFrame:
     Args:
         laps_df: FastF1 laps DataFrame. Must contain columns:
                  ['Driver', 'Stint', 'Compound', 'LapNumber'].
-                 Optional: ['Team', 'PitInLap', 'PitOutLap'].
+                 Optional: ['Team']. Pit columns: PitOutLap/PitInLap (boolean)
+                 or PitOutTime/PitInTime (FastF1 native timestamps).
 
     Returns:
         DataFrame with columns [driver, team, stint, compound, laps].
@@ -39,8 +40,12 @@ def stints_from_laps(laps_df: pd.DataFrame) -> pd.DataFrame:
     clean = laps_df.copy()
     if "PitOutLap" in clean.columns:
         clean = clean[~clean["PitOutLap"].fillna(False)]
+    elif "PitOutTime" in clean.columns:
+        clean = clean[clean["PitOutTime"].isna()]
     if "PitInLap" in clean.columns:
         clean = clean[~clean["PitInLap"].fillna(False)]
+    elif "PitInTime" in clean.columns:
+        clean = clean[clean["PitInTime"].isna()]
 
     clean = clean.dropna(subset=["Compound", "Stint"])
     clean = clean[clean["Compound"] != "UNKNOWN"]

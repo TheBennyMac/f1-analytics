@@ -24,9 +24,12 @@ def median_pit_lap(laps_df: pd.DataFrame) -> float | None:
         Median first pit lap across all drivers, or None if no pit stops found
         or if 'PitInLap' column is missing.
     """
-    if "PitInLap" not in laps_df.columns:
+    if "PitInLap" in laps_df.columns:
+        pit_laps = laps_df[laps_df["PitInLap"].fillna(False)]
+    elif "PitInTime" in laps_df.columns:
+        pit_laps = laps_df[laps_df["PitInTime"].notna()]
+    else:
         return None
-    pit_laps = laps_df[laps_df["PitInLap"].fillna(False)]
     if pit_laps.empty:
         return None
     first_stops = pit_laps.groupby("Driver")["LapNumber"].min()
@@ -59,8 +62,12 @@ def lap_time_deltas_by_phase(
     clean = laps_df.copy()
     if "PitOutLap" in clean.columns:
         clean = clean[~clean["PitOutLap"].fillna(False)]
+    elif "PitOutTime" in clean.columns:
+        clean = clean[clean["PitOutTime"].isna()]
     if "PitInLap" in clean.columns:
         clean = clean[~clean["PitInLap"].fillna(False)]
+    elif "PitInTime" in clean.columns:
+        clean = clean[clean["PitInTime"].isna()]
     # IsAccurate is intentionally not applied here — in race sessions it marks
     # SC/VSC laps False but also filters too aggressively, leaving fewer than
     # the minimum drivers per lap number required to compute a gap.
