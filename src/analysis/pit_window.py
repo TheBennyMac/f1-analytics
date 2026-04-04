@@ -6,8 +6,8 @@ pit window) is more competitive than the post-stop phase, where fresh tyres
 tend to spread the field.
 
 A sprint race has no mandatory stop, making it a useful pit-stop-free baseline.
-The per-lap P1-P5 gap is used rather than P1-P10 to reduce sensitivity to
-DNFs and retirement-heavy fields.
+The per-lap P1-P3 gap is used rather than P1-P10 to remain robust across
+attrition-heavy fields and SC periods.
 """
 
 import pandas as pd
@@ -39,9 +39,9 @@ def lap_time_deltas_by_phase(
 ) -> dict[str, float | None]:
     """Return mean per-lap field spread before and after a split lap.
 
-    Computes the mean of the per-lap P1-P5 fastest lap gap across all laps in
-    each phase. P1-P5 (not P1-P10) is used to limit sensitivity to small
-    attrition-heavy fields.
+    Computes the mean of the per-lap P1-P3 fastest lap gap across all laps in
+    each phase. P1-P3 (not P1-P10) is used to remain robust across
+    attrition-heavy fields and SC periods.
 
     Args:
         laps_df: FastF1 laps DataFrame.
@@ -61,8 +61,9 @@ def lap_time_deltas_by_phase(
         clean = clean[~clean["PitOutLap"].fillna(False)]
     if "PitInLap" in clean.columns:
         clean = clean[~clean["PitInLap"].fillna(False)]
-    if "IsAccurate" in clean.columns:
-        clean = clean[clean["IsAccurate"].fillna(False)]
+    # IsAccurate is intentionally not applied here — in race sessions it marks
+    # SC/VSC laps False but also filters too aggressively, leaving fewer than
+    # the minimum drivers per lap number required to compute a gap.
     clean = clean.dropna(subset=["LapTime", "LapNumber"]).copy()
     clean["lap_s"] = clean["LapTime"].dt.total_seconds()
 
@@ -72,8 +73,8 @@ def lap_time_deltas_by_phase(
         gaps = []
         for _, lap_group in phase_df.groupby("LapNumber"):
             ranked = lap_group["lap_s"].sort_values().reset_index(drop=True)
-            if len(ranked) >= 5:
-                gaps.append(float(ranked.iloc[4] - ranked.iloc[0]))
+            if len(ranked) >= 3:
+                gaps.append(float(ranked.iloc[2] - ranked.iloc[0]))
         if not gaps:
             return None
         return round(float(pd.Series(gaps).mean()), 3)
