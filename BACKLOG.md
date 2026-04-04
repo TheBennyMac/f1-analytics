@@ -101,9 +101,19 @@
     per race (a race with two SCs is materially different to one with one)
   - Count distinct deployment events from `race_control_messages` per session
 - [ ] "DRS made overtaking artificial" — overtake index pre/post DRS
-- [ ] "Sprints are only exciting before the tyre stops" — compare lap
-    time deltas and position changes in first vs second half of sprint
-    races; test whether 2026 observation holds across the era
+- [ ] "Races are more exciting before the pit stop" — in full Grand Prix
+    races, the pre-pit-stop phase (cars on original tyres, natural
+    degradation) appears more competitive than the post-stop phase
+    (field reset, fresh Hard tyres, gaps re-open)
+  - Use `pit_window.py` phase split as foundation; extend with
+    position change counts pre vs post median pit lap
+  - Examine tyre compound angle: Medium pre-stop vs Hard post-stop —
+    does compound choice correlate with processional post-stop racing?
+  - Test whether this pattern is specific to 2026 or present across
+    the Ground Effect Era
+  - 2026 hypothesis: Hard tyres are not allowing effective racing
+    compared to Mediums; other causes (track position, DRS, fuel
+    load) should also be surfaced
 - [ ] "Turn 1 chaos is worse in regulation reset years" — compare
     first-lap incidents and retirements in Year 1 vs Year 2+ of each era
 - [ ] DNF cause categorisation — group FastF1 status values into:
