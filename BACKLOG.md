@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.3.0 (2026 Era: First Data)
+## Current Version: v0.5.1 (Narrative Testing: Ferrari Trajectory)
 
 ### Scope Decision (2026-03-31)
 
@@ -94,7 +94,7 @@
 
 ## Should Have (v0.5.0 — Narrative Testing)
 
-- [ ] "Ferrari always bottles it" — within-season points trajectory analysis
+- [x] "Ferrari always bottles it" — within-season points trajectory analysis
   - Original hypothesis (championship lead conversion rate) requires
     historical data beyond our 2022–2026 scope; deferred — see v0.7.0
   - Reframed for available data: in seasons where Ferrari was competitive
@@ -102,6 +102,8 @@
     round by round — when does the gap open up and why?
   - Identify the inflection point where Ferrari's title challenge falters
   - Compare trajectory to other competitive constructors in the same seasons
+  - **Verdict: not supported** — Ferrari led 2022 before Red Bull dominance;
+    were second-best for most of 2024. Two seasons directional only.
 - [ ] "Monaco produces processional races" — overtake index by circuit
 - [ ] "Safety car lottery" — SC frequency and position change correlation
   - Extend `had_sc`/`had_vsc`/`had_red_flag` booleans to deployment counts
