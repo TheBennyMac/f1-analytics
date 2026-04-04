@@ -116,14 +116,19 @@
     load) should also be surfaced
 - [ ] "Turn 1 chaos is worse in regulation reset years" — compare
     first-lap incidents and retirements in Year 1 vs Year 2+ of each era
-- [ ] DNF cause categorisation — group FastF1 status values into:
-    Mechanical (Engine, Gearbox, Hydraulics, Power Unit etc.),
-    Chassis/Collision (Accident, Collision, Collision damage),
-    Administrative (Disqualified, Did not start, Withdrew),
-    Unknown (Retired — flag but exclude from percentage breakdowns)
-  - Test whether regulation reset years skew more mechanical than
-    settled era years — new parts under development stress
-- [ ] Notebook: `notebooks/04_narrative_testing.ipynb`
+- [x] DNF cause categorisation — module built, narrative tested
+  - **Verdict: inconclusive — data source insufficient**
+  - FastF1 status strings degrade significantly from 2023 onward;
+    2024 and 2025 have zero attributed (Mechanical/Collision) DNFs —
+    everything records as generic "Retired"
+  - 2022 data is credible (52% Mechanical / 48% Collision) but
+    year-on-year comparison is not possible from this source
+  - `src/analysis/dnf_categorisation.py` remains as infrastructure
+    for any future dataset with richer status recording
+  - To test the narrative properly: requires a manually curated
+    source (e.g. motorsport-reference.com race reports)
+- [x] Notebook: `notebooks/04_narrative_testing.ipynb` — created,
+  DNF section complete with findings documented
 
 ## Could Have (v0.6.0 — UI / Publishing)
 
