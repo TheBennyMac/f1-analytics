@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.5.3 (Narrative Testing: Safety Car Lottery)
+## Current Version: v0.5.4 (Narrative Testing: DRS vs Active Aero)
 
 ### Scope Decision (2026-03-31)
 
@@ -115,7 +115,10 @@
   - **Verdict: supported** — overtake index rises with each SC deployment:
     1.487 (0 SCs) → 1.767 (1 SC) → 2.131 (2+). SC rate peaked at 73%
     in 2022, declining to 33% in 2024.
-- [ ] "DRS made overtaking artificial" — overtake index pre/post DRS
+- [x] "DRS made overtaking artificial" — overtake index pre/post DRS
+  - Reframed: Ground Effect Era (DRS, 2022–2025) vs 2026 Era (active aero)
+  - **Verdict: not supported** — overtake index higher in 2026 (1.874) than
+    DRS era (1.688); 3 rounds directional only, revisit as season matures
 - [ ] "Races are more exciting before the pit stop" — in full Grand Prix
     races, the pre-pit-stop phase (cars on original tyres, natural
     degradation) appears more competitive than the post-stop phase

@@ -196,6 +196,48 @@ def monaco_vs_field(
     return df.sort_values("mean_overtake_index").reset_index(drop=True)
 
 
+def overtake_index_by_era(race_index_df: pd.DataFrame) -> pd.DataFrame:
+    """Mean overtake index per era, using season to map to era name.
+
+    Uses EraHelper to group seasons into regulation eras. Designed for
+    comparing DRS-era racing (Ground Effect Era, 2022–2025) against
+    the 2026 active aero era.
+
+    Args:
+        race_index_df: Output of overtake_index_per_race(). Must contain
+                       a 'season' column.
+
+    Returns:
+        DataFrame with columns [era, seasons, races, mean_overtake_index,
+        mean_positions_gained].
+        Sorted by mean_overtake_index ascending.
+    """
+    from src.utils.era_helper import get_era_name
+
+    if race_index_df.empty or "season" not in race_index_df.columns:
+        return pd.DataFrame(
+            columns=[
+                "era", "seasons", "races",
+                "mean_overtake_index", "mean_positions_gained",
+            ]
+        )
+
+    df = race_index_df.copy()
+    df["era"] = df["season"].apply(get_era_name)
+
+    agg = df.groupby("era").agg(
+        seasons=("season", "nunique"),
+        races=("overtake_index", "count"),
+        mean_overtake_index=("overtake_index", "mean"),
+        mean_positions_gained=("positions_gained", "mean"),
+    ).reset_index()
+
+    agg["mean_overtake_index"] = agg["mean_overtake_index"].round(3)
+    agg["mean_positions_gained"] = agg["mean_positions_gained"].round(1)
+
+    return agg.sort_values("mean_overtake_index").reset_index(drop=True)
+
+
 def _safe_int(value: object) -> int | None:
     """Convert value to int, returning None on failure."""
     try:
