@@ -53,7 +53,7 @@ def get_session_results(year: int, event: str | int, session_type: str) -> pd.Da
 
 
 def get_race_control_flags(session: fastf1.core.Session) -> dict:
-    """Return a dict of race control flags for a loaded session.
+    """Return a dict of race control flags and deployment counts for a session.
 
     Inspects race_control_messages for safety car deployments, virtual safety
     car deployments, and red flags.
@@ -62,12 +62,18 @@ def get_race_control_flags(session: fastf1.core.Session) -> dict:
         session: A loaded FastF1 Session object (must already have .load() called).
 
     Returns:
-        Dict with keys: had_sc (bool), had_vsc (bool), had_red_flag (bool).
+        Dict with keys:
+            had_sc (bool), had_vsc (bool), had_red_flag (bool),
+            sc_count (int), vsc_count (int), red_flag_count (int).
+        Counts reflect distinct deployment events (DEPLOYED messages only).
     """
     try:
         rcm = session.race_control_messages
         if rcm is None or rcm.empty:
-            return {"had_sc": False, "had_vsc": False, "had_red_flag": False}
+            return {
+                "had_sc": False, "had_vsc": False, "had_red_flag": False,
+                "sc_count": 0, "vsc_count": 0, "red_flag_count": 0,
+            }
         # Red flag: use the structured Flag column — 'RED' is unambiguous.
         # SC/VSC: not stored as Flag values; detected via Message text.
         #   VSC check first, then SC excludes rows that mention 'VIRTUAL'
@@ -78,15 +84,31 @@ def get_race_control_flags(session: fastf1.core.Session) -> dict:
             else pd.Series([], dtype=str)
         )
         flags = rcm["Flag"].fillna("") if "Flag" in rcm.columns else pd.Series([], dtype=str)
-        had_red_flag = (flags == "RED").any()
-        had_vsc = messages.str.contains("VIRTUAL SAFETY CAR DEPLOYED").any()
-        had_sc = (
+
+        red_flag_mask = flags == "RED"
+        vsc_mask = messages.str.contains("VIRTUAL SAFETY CAR DEPLOYED")
+        sc_mask = (
             messages.str.contains("SAFETY CAR DEPLOYED") &
             ~messages.str.contains("VIRTUAL")
-        ).any()
+        )
+
+        had_red_flag = red_flag_mask.any()
+        had_vsc = vsc_mask.any()
+        had_sc = sc_mask.any()
+
     except Exception:
-        return {"had_sc": False, "had_vsc": False, "had_red_flag": False}
-    return {"had_sc": bool(had_sc), "had_vsc": bool(had_vsc), "had_red_flag": bool(had_red_flag)}
+        return {
+            "had_sc": False, "had_vsc": False, "had_red_flag": False,
+            "sc_count": 0, "vsc_count": 0, "red_flag_count": 0,
+        }
+    return {
+        "had_sc": bool(had_sc),
+        "had_vsc": bool(had_vsc),
+        "had_red_flag": bool(had_red_flag),
+        "sc_count": int(sc_mask.sum()),
+        "vsc_count": int(vsc_mask.sum()),
+        "red_flag_count": int(red_flag_mask.sum()),
+    }
 
 
 def get_event_schedule(year: int) -> pd.DataFrame:

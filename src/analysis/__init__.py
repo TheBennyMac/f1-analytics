@@ -73,6 +73,12 @@ from src.analysis.overtake_index import (
     overtake_index_by_circuit,
     monaco_vs_field,
 )
+from src.analysis.safety_car import (
+    sc_counts_per_race,
+    sc_position_impact,
+    sc_lottery_summary,
+    intervention_frequency,
+)
 
 __all__ = [
     "gini_coefficient", "points_gini_by_round", "points_gap_by_round", "season_end_gini",
@@ -91,4 +97,6 @@ __all__ = [
     "constructor_trajectory", "gap_inflection_round",
     "position_changes_per_race", "overtake_index_per_race",
     "overtake_index_by_circuit", "monaco_vs_field",
+    "sc_counts_per_race", "sc_position_impact",
+    "sc_lottery_summary", "intervention_frequency",
 ]
