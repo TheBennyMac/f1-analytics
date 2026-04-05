@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.5.2 (Narrative Testing: Monaco Overtake Index)
+## Current Version: v0.5.3 (Narrative Testing: Safety Car Lottery)
 
 ### Scope Decision (2026-03-31)
 
@@ -108,10 +108,13 @@
   - **Verdict: partially supported** — Monaco ranks 2nd lowest by overtake
     index (behind Japan); not uniquely processional. Both circuits are
     qualifying spectacles where grid position is structurally decisive.
-- [ ] "Safety car lottery" — SC frequency and position change correlation
+- [x] "Safety car lottery" — SC frequency and position change correlation
   - Extend `had_sc`/`had_vsc`/`had_red_flag` booleans to deployment counts
     per race (a race with two SCs is materially different to one with one)
   - Count distinct deployment events from `race_control_messages` per session
+  - **Verdict: supported** — overtake index rises with each SC deployment:
+    1.487 (0 SCs) → 1.767 (1 SC) → 2.131 (2+). SC rate peaked at 73%
+    in 2022, declining to 33% in 2024.
 - [ ] "DRS made overtaking artificial" — overtake index pre/post DRS
 - [ ] "Races are more exciting before the pit stop" — in full Grand Prix
     races, the pre-pit-stop phase (cars on original tyres, natural
