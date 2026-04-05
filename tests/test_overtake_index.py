@@ -5,6 +5,7 @@ from src.analysis.overtake_index import (
     overtake_index_per_race,
     overtake_index_by_circuit,
     monaco_vs_field,
+    overtake_index_by_era,
 )
 
 
@@ -267,3 +268,55 @@ class TestMonacoVsField:
     def test_no_match_all_false(self):
         result = monaco_vs_field(self._circuit_df(), circuit="Unknown GP")
         assert result["is_target"].sum() == 0
+
+
+class TestOvertakeIndexByEra:
+    def _race_index(self) -> pd.DataFrame:
+        return pd.DataFrame([
+            {"season": 2022, "round": 1, "race_name": "Bahrain Grand Prix",
+             "overtake_index": 0.40, "positions_gained": 8, "finishers": 18},
+            {"season": 2023, "round": 1, "race_name": "Bahrain Grand Prix",
+             "overtake_index": 0.35, "positions_gained": 7, "finishers": 19},
+            {"season": 2026, "round": 1, "race_name": "Australian Grand Prix",
+             "overtake_index": 0.55, "positions_gained": 11, "finishers": 18},
+        ])
+
+    def test_returns_correct_columns(self):
+        result = overtake_index_by_era(self._race_index())
+        expected = {
+            "era", "seasons", "races",
+            "mean_overtake_index", "mean_positions_gained",
+        }
+        assert set(result.columns) == expected
+
+    def test_groups_by_era_correctly(self):
+        result = overtake_index_by_era(self._race_index())
+        eras = set(result["era"].tolist())
+        assert "Ground Effect Era" in eras
+        assert "2026 Era" in eras
+
+    def test_ground_effect_era_has_two_seasons(self):
+        result = overtake_index_by_era(self._race_index())
+        gee = result[result["era"] == "Ground Effect Era"].iloc[0]
+        assert gee["seasons"] == 2
+        assert gee["races"] == 2
+
+    def test_mean_calculated_correctly(self):
+        result = overtake_index_by_era(self._race_index())
+        gee = result[result["era"] == "Ground Effect Era"].iloc[0]
+        assert gee["mean_overtake_index"] == pytest.approx(0.375)
+
+    def test_sorted_ascending_by_overtake_index(self):
+        result = overtake_index_by_era(self._race_index())
+        indices = result["mean_overtake_index"].tolist()
+        assert indices == sorted(indices)
+
+    def test_empty_input_returns_empty_dataframe(self):
+        result = overtake_index_by_era(pd.DataFrame())
+        assert result.empty
+        assert "era" in result.columns
+
+    def test_missing_season_column_returns_empty(self):
+        df = pd.DataFrame({"overtake_index": [0.3], "positions_gained": [6]})
+        result = overtake_index_by_era(df)
+        assert result.empty

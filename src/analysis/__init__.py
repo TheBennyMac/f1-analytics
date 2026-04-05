@@ -72,6 +72,7 @@ from src.analysis.overtake_index import (
     overtake_index_per_race,
     overtake_index_by_circuit,
     monaco_vs_field,
+    overtake_index_by_era,
 )
 from src.analysis.safety_car import (
     sc_counts_per_race,
@@ -96,7 +97,7 @@ __all__ = [
     "cumulative_constructor_points", "points_gap_to_leader",
     "constructor_trajectory", "gap_inflection_round",
     "position_changes_per_race", "overtake_index_per_race",
-    "overtake_index_by_circuit", "monaco_vs_field",
+    "overtake_index_by_circuit", "monaco_vs_field", "overtake_index_by_era",
     "sc_counts_per_race", "sc_position_impact",
     "sc_lottery_summary", "intervention_frequency",
 ]
