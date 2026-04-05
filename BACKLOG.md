@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.5.1 (Narrative Testing: Ferrari Trajectory)
+## Current Version: v0.5.2 (Narrative Testing: Monaco Overtake Index)
 
 ### Scope Decision (2026-03-31)
 
@@ -104,7 +104,10 @@
   - Compare trajectory to other competitive constructors in the same seasons
   - **Verdict: not supported** — Ferrari led 2022 before Red Bull dominance;
     were second-best for most of 2024. Two seasons directional only.
-- [ ] "Monaco produces processional races" — overtake index by circuit
+- [x] "Monaco produces processional races" — overtake index by circuit
+  - **Verdict: partially supported** — Monaco ranks 2nd lowest by overtake
+    index (behind Japan); not uniquely processional. Both circuits are
+    qualifying spectacles where grid position is structurally decisive.
 - [ ] "Safety car lottery" — SC frequency and position change correlation
   - Extend `had_sc`/`had_vsc`/`had_red_flag` booleans to deployment counts
     per race (a race with two SCs is materially different to one with one)
