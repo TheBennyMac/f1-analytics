@@ -9,6 +9,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.5.3] — 2026-04-05
+
+### Added
+
+- `src/data/fastf1_loader.py` — `get_race_control_flags()` extended to
+  return `sc_count`, `vsc_count`, `red_flag_count` (distinct deployment
+  events) alongside existing boolean flags
+- `src/analysis/safety_car.py` — safety car lottery analysis:
+  - `sc_counts_per_race()` — one row per race with deployment counts
+    and `any_intervention` flag
+  - `sc_position_impact()` — joins SC counts with overtake index per race
+  - `sc_lottery_summary()` — mean overtake index grouped by SC count
+    (0 SCs / 1 SC / 2+ SCs)
+  - `intervention_frequency()` — SC/VSC/red flag rates by season
+- `tests/test_safety_car.py` — 25 tests (245 total passing)
+- `src/analysis/__init__.py` — safety_car module exported
+- `notebooks/04_narrative_testing.ipynb` — Section 4: SC lottery
+  - Intervention frequency table by season
+  - Bar chart: mean overtake index by SC count group
+  - Scatter: SC deployments vs overtake index per race
+  - Findings and verdict documented
+- Title cell updated to reflect all four completed narratives
+
+### Analysis
+
+- SC deployment rate: 73% in 2022, declining to 33% in 2024, 50% in 2025
+- Overtake index: 1.487 (0 SCs) → 1.767 (1 SC) → 2.131 (2+ SCs)
+- **Narrative verdict: supported** — each SC deployment correlates with
+  materially more position changes; effect compounds with multiple
+  deployments
+
+---
+
 ## [v0.5.2] — 2026-04-05
 
 ### Added
