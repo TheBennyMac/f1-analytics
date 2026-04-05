@@ -9,6 +9,95 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.5.2] — 2026-04-05
+
+### Added
+
+- `src/analysis/overtake_index.py` — overtake index analysis:
+  - `position_changes_per_race()` — net position delta per driver per race;
+    excludes DNFs and pit-lane starters (grid == 0)
+  - `overtake_index_per_race()` — positions gained / starters per race
+    (normalised for field size and attrition)
+  - `overtake_index_by_circuit()` — mean index per circuit across seasons,
+    sorted ascending (most processional first)
+  - `monaco_vs_field()` — circuit rankings with target circuit flagged
+- `tests/test_overtake_index.py` — 26 tests (220 total passing)
+- `src/analysis/__init__.py` — overtake_index module exported
+- `notebooks/04_narrative_testing.ipynb` — Section 3: Monaco overtake index
+  - Bar chart of all circuits ranked by mean overtake index (2022–2025)
+  - Monaco highlighted; field mean reference line
+  - Findings table and narrative verdict
+
+### Analysis
+
+- Monaco mean overtake index: 2nd lowest on the calendar, behind Japan
+- Both considerably below the field mean
+- **Narrative verdict: partially supported** — Monaco is genuinely
+  low-overtaking but not uniquely so; Japan is comparably processional
+- Insight: both circuits are qualifying spectacles where grid position
+  is structurally decisive — low overtaking and high qualifying interest
+  appear to be two sides of the same coin
+
+---
+
+## [v0.5.1] — 2026-04-04
+
+### Added
+
+- `notebooks/04_narrative_testing.ipynb` — Section 2 executed and findings documented:
+  - Ferrari championship trajectory charts for 2022 and 2024
+  - Inflection point annotations on cumulative points gap charts
+  - Multi-constructor comparison overlaid per season
+
+### Analysis
+
+- 2022: Ferrari gap widened at Round 5 — but Red Bull had early engine failures;
+  Ferrari were leading the championship to that point
+- 2024: Gap widened at Round 3, then again Round 7–8;
+  Ferrari closed from Round 18
+- Rate of decline in 2022 similar to Mercedes — Red Bull simply dominated the field
+- 2024: Ferrari second-best for most of the season behind Red Bull, then McLaren
+- **Narrative verdict: not supported** — no consistent "bottling it" pattern across
+  these two seasons; two data points are directional only, not statistically conclusive
+
+### Deferred
+
+- Full championship lead conversion rate requires pre-2022 data — see v0.7.0
+
+---
+
+## [v0.5.0] — 2026-04-04
+
+### Added
+
+- `src/analysis/dnf_categorisation.py` — DNF cause classification:
+  - `categorise_dnf()` — classifies status strings as Mechanical,
+    Collision, or Unknown
+  - `dnf_category_counts()` — grouped counts by season/era year/constructor
+  - `mechanical_share_by_era_year()` — mechanical DNF share per year-within-era
+- `src/analysis/championship_trajectory.py` — constructor points trajectory:
+  - `cumulative_constructor_points()` — running points total by round
+  - `points_gap_to_leader()` — gap to championship leader per round
+  - `constructor_trajectory()` — filtered trajectory for named constructors
+  - `gap_inflection_round()` — round where gap starts widening
+    (first sustained increase)
+- `src/analysis/__init__.py` — both modules exported to public API
+- `tests/test_dnf_categorisation.py` — coverage for categorisation logic
+- `tests/test_championship_trajectory.py` — 15 tests (194 total passing)
+- `notebooks/04_narrative_testing.ipynb` — narrative testing notebook:
+  - Section 1: DNF cause categorisation across 2022–2025
+  - Section 2: Ferrari championship trajectory (2022, 2024)
+
+### Analysis
+
+- DNF categorisation verdict: **inconclusive** — FastF1 status strings degrade
+  from 2023 onward; 2024–2025 show zero attributed DNFs (all "Retired")
+- 2022 data credible (52% Mechanical / 48% Collision) but year-on-year comparison
+  not possible from this source alone
+- `dnf_categorisation.py` retained as infrastructure for richer future datasets
+
+---
+
 ## [v0.4.0] — 2026-04-03
 
 ### Added

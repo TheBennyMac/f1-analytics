@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.3.0 (2026 Era: First Data)
+## Current Version: v0.5.2 (Narrative Testing: Monaco Overtake Index)
 
 ### Scope Decision (2026-03-31)
 
@@ -94,7 +94,7 @@
 
 ## Should Have (v0.5.0 — Narrative Testing)
 
-- [ ] "Ferrari always bottles it" — within-season points trajectory analysis
+- [x] "Ferrari always bottles it" — within-season points trajectory analysis
   - Original hypothesis (championship lead conversion rate) requires
     historical data beyond our 2022–2026 scope; deferred — see v0.7.0
   - Reframed for available data: in seasons where Ferrari was competitive
@@ -102,7 +102,12 @@
     round by round — when does the gap open up and why?
   - Identify the inflection point where Ferrari's title challenge falters
   - Compare trajectory to other competitive constructors in the same seasons
-- [ ] "Monaco produces processional races" — overtake index by circuit
+  - **Verdict: not supported** — Ferrari led 2022 before Red Bull dominance;
+    were second-best for most of 2024. Two seasons directional only.
+- [x] "Monaco produces processional races" — overtake index by circuit
+  - **Verdict: partially supported** — Monaco ranks 2nd lowest by overtake
+    index (behind Japan); not uniquely processional. Both circuits are
+    qualifying spectacles where grid position is structurally decisive.
 - [ ] "Safety car lottery" — SC frequency and position change correlation
   - Extend `had_sc`/`had_vsc`/`had_red_flag` booleans to deployment counts
     per race (a race with two SCs is materially different to one with one)

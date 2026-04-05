@@ -67,6 +67,12 @@ from src.analysis.championship_trajectory import (
     constructor_trajectory,
     gap_inflection_round,
 )
+from src.analysis.overtake_index import (
+    position_changes_per_race,
+    overtake_index_per_race,
+    overtake_index_by_circuit,
+    monaco_vs_field,
+)
 
 __all__ = [
     "gini_coefficient", "points_gini_by_round", "points_gap_by_round", "season_end_gini",
@@ -83,4 +89,6 @@ __all__ = [
     "categorise_dnf", "dnf_category_counts", "mechanical_share_by_era_year",
     "cumulative_constructor_points", "points_gap_to_leader",
     "constructor_trajectory", "gap_inflection_round",
+    "position_changes_per_race", "overtake_index_per_race",
+    "overtake_index_by_circuit", "monaco_vs_field",
 ]
