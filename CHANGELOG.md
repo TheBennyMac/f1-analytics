@@ -9,6 +9,32 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.5.4] — 2026-04-06
+
+### Added
+
+- `src/analysis/overtake_index.py` — `overtake_index_by_era()`: groups
+  race-level overtake index by regulation era using EraHelper
+- `tests/test_overtake_index.py` — 7 new tests for `overtake_index_by_era()`
+  (33 total in file, 252 total passing)
+- `src/analysis/__init__.py` — `overtake_index_by_era` exported
+- `notebooks/04_narrative_testing.ipynb` — Section 5: DRS vs active aero
+  - Lightweight 2026 results loader (FastF1 + OpenF1 fallback; future
+    rounds skipped gracefully)
+  - Era comparison bar chart: Ground Effect Era vs 2026 Era
+  - Per-race scatter coloured by era
+  - Findings and verdict documented
+
+### Analysis
+
+- Ground Effect Era (DRS, 2022–2025): mean overtake index 1.688 (92 races)
+- 2026 Era (active aero, 3 rounds): mean overtake index 1.874
+- **Narrative verdict: not supported** — position changes are higher in
+  2026 without DRS, not lower. 3 rounds is directional only; early 2026
+  circuits may be inherently higher-overtaking. Revisit as season matures.
+
+---
+
 ## [v0.5.3] — 2026-04-05
 
 ### Added
