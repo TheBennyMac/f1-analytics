@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.5.4 (Narrative Testing: DRS vs Active Aero)
+## Current Version: v0.5.5 (Narrative Testing: Pit Stop Excitement)
 
 ### Scope Decision (2026-03-31)
 
@@ -119,19 +119,14 @@
   - Reframed: Ground Effect Era (DRS, 2022–2025) vs 2026 Era (active aero)
   - **Verdict: not supported** — overtake index higher in 2026 (1.874) than
     DRS era (1.688); 3 rounds directional only, revisit as season matures
-- [ ] "Races are more exciting before the pit stop" — in full Grand Prix
+- [x] "Races are more exciting before the pit stop" — in full Grand Prix
     races, the pre-pit-stop phase (cars on original tyres, natural
     degradation) appears more competitive than the post-stop phase
     (field reset, fresh Hard tyres, gaps re-open)
-  - Use `pit_window.py` phase split as foundation; extend with
-    position change counts pre vs post median pit lap
-  - Examine tyre compound angle: Medium pre-stop vs Hard post-stop —
-    does compound choice correlate with processional post-stop racing?
-  - Test whether this pattern is specific to 2026 or present across
-    the Ground Effect Era
-  - 2026 hypothesis: Hard tyres are not allowing effective racing
-    compared to Mediums; other causes (track position, DRS, fuel
-    load) should also be surfaced
+  - **Verdict: partially supported, era-specific** — negligible pre/post
+    split in 2022 (2.592 vs 2.556 positions/lap); dramatic in 2026
+    (4.052 vs 1.144). 2026 Hard tyres appear to produce processional
+    post-stop racing. Only 2 non-sprint 2026 races; directional only.
 - [ ] "Turn 1 chaos is worse in regulation reset years" — compare
     first-lap incidents and retirements in Year 1 vs Year 2+ of each era
 - [x] DNF cause categorisation — module built, narrative tested

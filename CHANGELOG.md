@@ -9,6 +9,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.5.5] — 2026-04-06
+
+### Added
+
+- `src/analysis/pit_window.py`:
+  - `position_changes_by_phase()` — positions gained per lap pre/post
+    median pit lap split; excludes pit laps from both phases
+  - `pit_excitement_summary()` — aggregates across multiple races
+- `tests/test_pit_window.py` — 10 new tests (24 total, 262 total passing)
+- `src/analysis/__init__.py` — new functions exported
+- `notebooks/04_narrative_testing.ipynb` — Section 6: pit stop excitement
+  - Lap data loader for 2022 and 2026 non-sprint races
+  - Grouped bar: mean pre vs post positions gained per lap by era
+  - Scatter: pre vs post per race with diagonal reference line
+  - Findings and verdict documented
+
+### Analysis
+
+- 2022 Ground Effect Era: pre 2.592 vs post 2.556 positions/lap (17 races)
+  — negligible difference; narrative does not hold for this era
+- 2026 Era: pre 4.052 vs post 1.144 positions/lap (2 races, directional)
+  — 3.5\u00d7 drop post-stop; likely reflects Hard tyre characteristics
+- **Narrative verdict: partially supported, era-specific** — effect is
+  dramatic in 2026 but absent in 2022. Revisit as 2026 season matures.
+
+---
+
 ## [v0.5.4] — 2026-04-06
 
 ### Added
