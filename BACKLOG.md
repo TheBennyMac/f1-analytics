@@ -156,11 +156,71 @@
     what % did they convert to a title?
   - Compare against other constructors for the same metric
 
-## Could Have (v0.6.0 — UI / Publishing)
+## Could Have (v0.6.0 — Publishing: Quarto Site)
 
-- [ ] Evaluate output medium: Streamlit, Dash, Observable, static site, or other
-- [ ] Decision based on what the analysis actually needs — not assumed upfront
-- [ ] Consider making repo public at this point
+Architecture decisions finalised 2026-04-06. All decisions below are fixed constraints.
+
+### Fixed Decisions
+- Product type: narrative/portfolio artefact (not an interactive tool)
+- Delivery: Quarto → static site → GitHub Pages
+- Interactivity: Level 1 only (hover/zoom via Plotly on scatter plots)
+- Data: precomputed Parquet files in `data/computed/` — FastF1 cannot run in hosted env
+- Rebuild: semi-automated (`scripts/update_all.py`) — manual trigger after each race
+- Chart strategy: Plotly for scatter plots where hover reveals race/circuit identity; Matplotlib for bar charts
+- Future extensibility preserved via clean layer separation — Streamlit can be added later without analysis rework
+- Repo goes public at first deployment — not before
+
+### Prerequisites (must be done before any site work)
+- [x] Pin `fastf1==3.8.2` in `requirements.txt`
+- [ ] Write `scripts/export_data.py` with atomic writes and schema validation
+- [ ] Add export cells to `notebooks/04` and `notebooks/02`
+- [ ] Run first export — verify `manifest.json` created correctly
+
+### Week 1 — Foundation
+- [ ] Create `data/computed/`, `scripts/`, `site/` directory structure
+- [ ] Write `scripts/export_data.py` (atomic staging → promote, schema validation, manifest update)
+- [ ] Add export cells to `notebooks/04_narrative_testing.ipynb` and `notebooks/02_2026_era_year1.ipynb`
+- [ ] Run first export; verify `manifest.json` contents
+- [ ] Install Quarto (`winget install --id Posit.Quarto`)
+- [ ] Create `site/_quarto.yml` (website type, `docs/` output, navbar)
+
+### Week 2 — Site Build
+- [ ] Build `site/index.qmd` — landing page reading last_updated and data coverage from `manifest.json`
+- [ ] Build 7 `.qmd` narrative pages (one per notebook section), each reading from `data/computed/`
+- [ ] Convert 5 charts from Matplotlib to Plotly:
+  - Ferrari trajectory — gap line chart by round
+  - Monaco — horizontal bar, all circuits
+  - Safety car — scatter: OI vs SC count per race
+  - DRS — scatter: OI per race coloured by era
+  - Pit excitement — scatter: pre vs post positions gained per race
+
+### Week 3 — Workflow and Deploy
+- [ ] Write `scripts/update_all.py` (execute notebooks → validate exports → render → commit)
+- [ ] Test full rebuild cycle end-to-end on a clean run
+- [ ] Review git history and notebook outputs before making repo public
+- [ ] Enable GitHub Pages on `main` branch, source: `site/docs/`
+- [ ] Verify live site at GitHub Pages URL
+- [ ] Update BACKLOG and CHANGELOG for v0.6.0
+
+### Data exports required (consumed by `.qmd` pages)
+| File | Source | Stable? |
+|---|---|---|
+| `results_2022_2025.parquet` | `notebooks/04` → `results_df` | Yes — export once |
+| `results_2026.parquet` | `notebooks/02` → `results_2026_df` | No — update each race |
+| `retirement_by_era.parquet` | `turn1_summary_by_era_year()` | Yes |
+| `overtake_index_by_race.parquet` | `overtake_index_per_race()` | No |
+| `sc_summary_by_race.parquet` | `sc_lottery_summary()` | No |
+| `pit_excitement_by_race.parquet` | `pit_excitement_summary()` | No |
+| `championship_trajectory.parquet` | `constructor_trajectory()` | Yes |
+
+### Post-race update workflow (once site is live)
+```
+1. Confirm FastF1 has new race data (manual verification)
+2. python scripts/update_all.py --season YYYY --round N
+3. quarto preview site/  (manual visual check)
+4. git push origin main
+5. Verify live site at GitHub Pages URL
+```
 
 ## Won't Have (this phase)
 
