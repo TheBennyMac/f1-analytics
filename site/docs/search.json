@@ -1,0 +1,240 @@
+[
+  {
+    "objectID": "narratives/07-turn1-chaos.html",
+    "href": "narratives/07-turn1-chaos.html",
+    "title": "Turn 1 Chaos",
+    "section": "",
+    "text": "“Turn 1 is where races are won and lost — and it’s worse in regulation reset years. Unfamiliar cars, uncertain relative pace, and aggressive positioning combine to produce more first-lap chaos when the regulations change.”\n\nThe hypothesis predicts that Year 1 of a new regulation era shows a higher rate of first-lap retirements than settled era years (Year 2+)."
+  },
+  {
+    "objectID": "narratives/07-turn1-chaos.html#the-narrative",
+    "href": "narratives/07-turn1-chaos.html#the-narrative",
+    "title": "Turn 1 Chaos",
+    "section": "",
+    "text": "“Turn 1 is where races are won and lost — and it’s worse in regulation reset years. Unfamiliar cars, uncertain relative pace, and aggressive positioning combine to produce more first-lap chaos when the regulations change.”\n\nThe hypothesis predicts that Year 1 of a new regulation era shows a higher rate of first-lap retirements than settled era years (Year 2+)."
+  },
+  {
+    "objectID": "narratives/07-turn1-chaos.html#method",
+    "href": "narratives/07-turn1-chaos.html#method",
+    "title": "Turn 1 Chaos",
+    "section": "Method",
+    "text": "Method\nA first-lap retirement is defined as a driver who:\n\nHad a valid grid position (started the race)\nDid not finish (DNF status)\nCompleted at most 2 laps — capturing lap 1 incidents plus cars that limped to the pits immediately after\n\nFastF1 assigns finishing positions 1–20 to all drivers including DNFs, so lap count (from lap-by-lap data) is used rather than finish position to identify early retirements.\nData covers 2022–2025 (92 races, all four years of the Ground Effect Era).\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport scripts.export_data as exp\n\nretirement_by_era = exp.read('retirement_by_era')\nprint(retirement_by_era.to_string(index=False))\n\n\n era_year  races  mean_starters  total_first_lap_dnfs  mean_dnf_rate\n        1     22           19.5                     9          0.021\n        2     22           19.9                     4          0.009\n        3     24           19.9                     3          0.006\n        4     24           20.0                     3          0.006\n\n\n\n\nShow code\nfig, ax = plt.subplots(figsize=(8, 4))\nfig.patch.set_facecolor('#222222')\nax.set_facecolor('#222222')\n\ncolours = ['#E8002D', '#FF9800', '#4CAF50', '#4CAF50']\nbars = ax.bar(\n    retirement_by_era['era_year'].astype(str).map(lambda y: f'Year {y}'),\n    retirement_by_era['mean_dnf_rate'] * 100,\n    color=colours,\n    edgecolor='none',\n    width=0.6,\n)\n\nfor bar, row in zip(bars, retirement_by_era.itertuples()):\n    ax.text(\n        bar.get_x() + bar.get_width() / 2,\n        bar.get_height() + 0.05,\n        f'{row.mean_dnf_rate * 100:.2f}%\\n({row.total_first_lap_dnfs} DNFs, {row.races} races)',\n        ha='center', va='bottom', color='white', fontsize=9,\n    )\n\nax.set_xlabel('Year within era', color='white')\nax.set_ylabel('Mean first-lap DNF rate (%)', color='white')\nax.set_title('First-Lap DNF Rate by Era Year — Ground Effect Era (2022–2025)', color='white', pad=16)\nax.tick_params(colors='white')\nax.spines[:].set_visible(False)\nax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1f}%'))\n# Extra headroom so bar labels don't clip into the title\nax.set_ylim(0, retirement_by_era['mean_dnf_rate'].max() * 100 * 1.35)\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nMean first-lap DNF rate by year within the Ground Effect Era (2022–2025). Year 1 = 2022, Year 4 = 2025."
+  },
+  {
+    "objectID": "narratives/07-turn1-chaos.html#findings",
+    "href": "narratives/07-turn1-chaos.html#findings",
+    "title": "Turn 1 Chaos",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nIs the first-lap DNF rate higher in Year 1?\nYes — Year 1 (2022) recorded a 2.1% mean rate, more than double any subsequent year\n\n\nHow does Year 1 compare to Years 2–4?\n~3.5× higher: 2022 = 2.1%, 2023 = 0.9%, 2024 = 0.6%, 2025 = 0.6%\n\n\nIs there a convergence trend?\nYes — the rate falls monotonically and stabilises by Year 3\n\n\nDoes lap 1 position change activity support the hypothesis?\nGridPosition not present in the FastF1 laps dataset — metric could not be computed\n\n\n\nVerdict: Supported.\nFirst-lap retirements are clearly elevated in the regulation reset year. Year 1 (2022) produced a mean first-lap DNF rate of 2.1% — roughly 3.5 times the rate of Years 2–4 (0.6–0.9%). The rate falls monotonically across the era and stabilises by Year 3, consistent with teams and drivers learning the limits of the new machinery.\nThe DNS data shows an interesting counter-pattern: Year 1 had the fewest drivers failing to start, suggesting teams prioritised getting cars to the grid in the reset year even at some reliability cost. By Year 2, more conservative decisions about race entry appear in the data.\nImplication for 2026: If the pattern holds, the first-lap incident rate in 2026 should be elevated relative to the settled Ground Effect Era years — and should decline by 2027–2028 as teams converge on safer setups. This will be tracked as 2026 data matures."
+  },
+  {
+    "objectID": "narratives/05-drs-active-aero.html",
+    "href": "narratives/05-drs-active-aero.html",
+    "title": "DRS vs Active Aero",
+    "section": "",
+    "text": "“DRS made overtaking artificial — it turned genuine racing moves into highway passes where the chasing driver simply drove past on the straight. Removing it should restore real racing.”\n\nThe hypothesis predicts that overtaking activity should be lower without DRS than with it. The 2026 regulation change — replacing DRS with active aerodynamics — provides a natural experiment, comparing Ground Effect Era (DRS on, 2022–2025) against 2026 (active aero)."
+  },
+  {
+    "objectID": "narratives/05-drs-active-aero.html#the-narrative",
+    "href": "narratives/05-drs-active-aero.html#the-narrative",
+    "title": "DRS vs Active Aero",
+    "section": "",
+    "text": "“DRS made overtaking artificial — it turned genuine racing moves into highway passes where the chasing driver simply drove past on the straight. Removing it should restore real racing.”\n\nThe hypothesis predicts that overtaking activity should be lower without DRS than with it. The 2026 regulation change — replacing DRS with active aerodynamics — provides a natural experiment, comparing Ground Effect Era (DRS on, 2022–2025) against 2026 (active aero)."
+  },
+  {
+    "objectID": "narratives/05-drs-active-aero.html#method",
+    "href": "narratives/05-drs-active-aero.html#method",
+    "title": "DRS vs Active Aero",
+    "section": "Method",
+    "text": "Method\nThe overtake index is computed for every race across both eras and compared. Because 2026 has only 3 completed rounds at the time of writing, this comparison is directional only.\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport plotly.graph_objects as go\nimport scripts.export_data as exp\nfrom src.analysis.overtake_index import overtake_index_by_era\n\nrace_oi_2022 = exp.read('overtake_index_by_race')\nresults_2026 = exp.read('results_2026')\n\nfrom src.analysis.overtake_index import overtake_index_per_race\nrace_oi_2026 = overtake_index_per_race(results_2026)\n\nimport pandas as pd\ncombined_oi = pd.concat([race_oi_2022, race_oi_2026], ignore_index=True)\nera_summary = overtake_index_by_era(combined_oi)\nprint(era_summary.to_string(index=False))\n\n\n              era  seasons  races  mean_overtake_index  mean_positions_gained\n         2026 Era        1      3                1.667                   36.7\nGround Effect Era        4     92                1.688                   33.4\n\n\n\n\nShow code\nfrom src.utils.era_helper import get_era_name\ncombined_oi['era'] = combined_oi['season'].apply(get_era_name)\n\nERA_COLOURS = {\n    'Ground Effect Era': '#636EFA',\n    '2026 Era': '#FF6B35',\n}\n\nfig = go.Figure()\n\nfor era, colour in ERA_COLOURS.items():\n    sub = combined_oi[combined_oi['era'] == era]\n    fig.add_trace(go.Scatter(\n        x=sub['season'],\n        y=sub['overtake_index'],\n        mode='markers',\n        name=era,\n        marker=dict(color=colour, size=8, opacity=0.8),\n        customdata=sub[['race_name', 'season', 'round', 'positions_gained', 'starters']].values,\n        hovertemplate=(\n            '&lt;b&gt;%{customdata[0]}&lt;/b&gt;&lt;br&gt;'\n            '%{customdata[1]} R%{customdata[2]}&lt;br&gt;'\n            'Overtake index: %{y:.3f}&lt;br&gt;'\n            'Positions gained: %{customdata[3]} / %{customdata[4]} starters'\n            '&lt;extra&gt;&lt;/extra&gt;'\n        ),\n    ))\n\n# Era mean lines — annotations offset vertically so they don't overlap\nannotation_yshifts = {'Ground Effect Era': 10, '2026 Era': -16}\nfor era, colour in ERA_COLOURS.items():\n    sub = combined_oi[combined_oi['era'] == era]\n    mean_oi = sub['overtake_index'].mean()\n    x_min = sub['season'].min()\n    x_max = sub['season'].max()\n    fig.add_shape(\n        type='line',\n        x0=x_min - 0.3, x1=x_max + 0.3,\n        y0=mean_oi, y1=mean_oi,\n        line=dict(color=colour, width=2, dash='dash'),\n    )\n    fig.add_annotation(\n        x=x_max + 0.3, y=mean_oi,\n        text=f'{era} mean: {mean_oi:.3f}',\n        showarrow=False,\n        xanchor='left',\n        font=dict(color=colour, size=11),\n        yshift=annotation_yshifts[era],\n    )\n\nall_seasons = sorted(combined_oi['season'].unique())\nfig.update_layout(\n    title='Overtake Index per Race — Ground Effect Era vs 2026 (Active Aero)',\n    xaxis=dict(\n        title='Season',\n        tickvals=all_seasons,\n        ticktext=[str(s) for s in all_seasons],\n    ),\n    yaxis_title='Overtake index (positions gained / starters)',\n    template='plotly_dark',\n    height=500,\n    margin=dict(t=60, r=160, b=100),\n    legend=dict(\n        orientation='h',\n        yanchor='top',\n        y=-0.15,\n        xanchor='center',\n        x=0.5,\n    ),\n)\nfig.show()\n\n\n                            \n                                            \nOvertake index per race coloured by era. Hover to see circuit and round detail."
+  },
+  {
+    "objectID": "narratives/05-drs-active-aero.html#findings",
+    "href": "narratives/05-drs-active-aero.html#findings",
+    "title": "DRS vs Active Aero",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nMean overtake index — Ground Effect Era (DRS, 2022–2025)?\n1.688 across 92 races\n\n\nMean overtake index — 2026 Era (active aero, 3 rounds)?\n1.874 across 3 rounds\n\n\nDoes removing DRS appear to reduce position changes?\nNo — 2026 shows a higher index\n\n\nIs the “DRS made overtaking artificial” narrative supported?\nNot supported\n\n\n\nVerdict: Not supported — on 3 rounds of data.\nIf DRS were artificially inflating overtaking, its removal should produce fewer position changes. Instead the opposite is observed: early 2026 races show a higher overtake index than the DRS era average.\nTwo important caveats apply. First, 3 rounds is a very small sample — the 2026 figure is directional only and must be revisited as the season matures. Second, the early 2026 calendar (Australia, China, Japan) may skew the comparison — these tracks produce different overtaking profiles to the full calendar average.\nThe data currently challenges the narrative, but a full season is needed before drawing firm conclusions."
+  },
+  {
+    "objectID": "narratives/03-monaco-overtake.html",
+    "href": "narratives/03-monaco-overtake.html",
+    "title": "Monaco Overtake Index",
+    "section": "",
+    "text": "“Monaco produces processional races — it is uniquely unsuited to overtaking and should be dropped from the calendar.”\n\nThe hypothesis predicts Monaco would rank as the lowest-overtaking circuit on the calendar by a clear margin."
+  },
+  {
+    "objectID": "narratives/03-monaco-overtake.html#the-narrative",
+    "href": "narratives/03-monaco-overtake.html#the-narrative",
+    "title": "Monaco Overtake Index",
+    "section": "",
+    "text": "“Monaco produces processional races — it is uniquely unsuited to overtaking and should be dropped from the calendar.”\n\nThe hypothesis predicts Monaco would rank as the lowest-overtaking circuit on the calendar by a clear margin."
+  },
+  {
+    "objectID": "narratives/03-monaco-overtake.html#method",
+    "href": "narratives/03-monaco-overtake.html#method",
+    "title": "Monaco Overtake Index",
+    "section": "Method",
+    "text": "Method\nOvertake index = total positions gained by classified finishers ÷ starters per race. This normalises for field size and attrition. DNFs and pit-lane starters (grid position = 0) are excluded — their position changes do not reflect on-track overtaking.\nData covers 2022–2025 (92 races, 22 circuits).\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport plotly.graph_objects as go\nimport scripts.export_data as exp\nfrom src.analysis.overtake_index import (\n    overtake_index_per_race,\n    overtake_index_by_circuit,\n    monaco_vs_field,\n)\n\nresults_df = exp.read('results_2022_2025')\nrace_oi = overtake_index_per_race(results_df)\ncircuit_oi = overtake_index_by_circuit(race_oi)\nranked = monaco_vs_field(circuit_oi)\n\nprint(f\"{len(circuit_oi)} circuits · {len(race_oi)} races · 2022–2025\")\n\n\n25 circuits · 92 races · 2022–2025\n\n\n\n\nShow code\ncolours = []\nfor _, row in ranked.iterrows():\n    if row['is_target']:\n        colours.append('#E8002D')   # Monaco — red\n    elif 'Japan' in row['race_name']:\n        colours.append('#FF9800')   # Japan — amber\n    else:\n        colours.append('#636EFA')   # Field — blue\n\nfig = go.Figure(go.Bar(\n    x=ranked['mean_overtake_index'],\n    y=ranked['race_name'],\n    orientation='h',\n    marker_color=colours,\n    customdata=ranked[['races', 'mean_positions_gained']].values,\n    hovertemplate=(\n        '&lt;b&gt;%{y}&lt;/b&gt;&lt;br&gt;'\n        'Mean overtake index: %{x:.3f}&lt;br&gt;'\n        'Races in sample: %{customdata[0]}&lt;br&gt;'\n        'Mean positions gained: %{customdata[1]:.1f}&lt;extra&gt;&lt;/extra&gt;'\n    ),\n))\n\nfield_mean = ranked['mean_overtake_index'].mean()\nfig.add_vline(\n    x=field_mean,\n    line_dash='dash',\n    line_color='white',\n    opacity=0.5,\n    annotation_text=f'Field mean {field_mean:.3f}',\n    annotation_position='top right',\n)\n\nfig.update_layout(\n    title='Mean Overtake Index by Circuit — 2022–2025',\n    xaxis_title='Mean overtake index (positions gained / starters)',\n    yaxis_title=None,\n    template='plotly_dark',\n    height=700,\n    margin=dict(l=200),\n)\nfig.show()\n\n\n                            \n                                            \nMean overtake index by circuit, 2022–2025. Higher = more position changes per race. Monaco and Japan highlighted."
+  },
+  {
+    "objectID": "narratives/03-monaco-overtake.html#findings",
+    "href": "narratives/03-monaco-overtake.html#findings",
+    "title": "Monaco Overtake Index",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nWhere does Monaco rank among all circuits?\n2nd lowest — behind Japan\n\n\nHow does Monaco compare to the field mean?\nConsiderably lower\n\n\nAre there circuits similarly processional to Monaco?\nJapan is the only comparable one\n\n\nIs the narrative supported?\nPartially\n\n\n\nVerdict: Partially supported.\nMonaco is genuinely one of the least overtaking circuits on the calendar — but it is not uniquely so. The Japanese Grand Prix ranks below Monaco on mean overtake index and yet attracts little of the same criticism. Both circuits are qualifying spectacles: because grid position is structurally decisive on street and high-downforce tracks, the races reward Saturday performance rather than Sunday wheel-to-wheel racing.\nThe narrative holds in the sense that Monaco produces fewer overtakes than a typical round — but the “uniquely processional” framing does not survive scrutiny. Japan is a parallel case that the received wisdom tends to ignore."
+  },
+  {
+    "objectID": "narratives/01-dnf-categorisation.html",
+    "href": "narratives/01-dnf-categorisation.html",
+    "title": "DNF Cause Categorisation",
+    "section": "",
+    "text": "“Regulation reset years produce more mechanical failures — teams are running cars that are not yet fully understood, and reliability suffers as a result.”\n\nThe hypothesis predicts that Year 1 of a new regulation era should show a higher share of mechanical DNFs relative to collision DNFs, with the share declining as teams develop their understanding of the new machinery across subsequent seasons."
+  },
+  {
+    "objectID": "narratives/01-dnf-categorisation.html#the-narrative",
+    "href": "narratives/01-dnf-categorisation.html#the-narrative",
+    "title": "DNF Cause Categorisation",
+    "section": "",
+    "text": "“Regulation reset years produce more mechanical failures — teams are running cars that are not yet fully understood, and reliability suffers as a result.”\n\nThe hypothesis predicts that Year 1 of a new regulation era should show a higher share of mechanical DNFs relative to collision DNFs, with the share declining as teams develop their understanding of the new machinery across subsequent seasons."
+  },
+  {
+    "objectID": "narratives/01-dnf-categorisation.html#method",
+    "href": "narratives/01-dnf-categorisation.html#method",
+    "title": "DNF Cause Categorisation",
+    "section": "Method",
+    "text": "Method\nDNF statuses from FastF1 results data (2022–2025) were categorised into three groups:\n\nMechanical — engine, gearbox, hydraulics, suspension failures\nCollision — accidents, contact, spins\nUnknown — generic “Retired” with no attributed cause\n\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport matplotlib.ticker as mtick\nfrom src.analysis.dnf_categorisation import (\n    categorise_dnf,\n    dnf_category_counts,\n    mechanical_share_by_era_year,\n)\nfrom src.utils.era_helper import get_year_within_era\nimport scripts.export_data as exp\n\nresults_df = exp.read('results_2022_2025')\n\n_CLASSIFIED = {'Finished', 'Lapped'}\ndef _is_dnf(status):\n    if status in _CLASSIFIED:\n        return False\n    if isinstance(status, str) and status.startswith('+') and 'Lap' in status:\n        return False\n    return True\n\ndnf_df = results_df[results_df['status'].apply(_is_dnf)].copy()\ndnf_df['category'] = dnf_df['status'].apply(categorise_dnf)\ndnf_df['era_year'] = dnf_df['season'].apply(get_year_within_era)\n\nseason_counts = dnf_category_counts(dnf_df, group_by=['season'])\nprint(f\"Total DNFs across 2022–2025: {len(dnf_df)}\")\nseason_counts\n\n\nTotal DNFs across 2022–2025: 254\n\n\n\n\n\n\n\n\n\nseason\ncategory\ncount\n\n\n\n\n0\n2022\nMechanical\n41\n\n\n1\n2022\nCollision\n32\n\n\n2\n2022\nAdministrative\n1\n\n\n3\n2023\nUnknown\n53\n\n\n4\n2023\nAdministrative\n7\n\n\n5\n2023\nCollision\n5\n\n\n6\n2023\nMechanical\n1\n\n\n7\n2024\nUnknown\n49\n\n\n8\n2024\nAdministrative\n5\n\n\n9\n2025\nUnknown\n51\n\n\n10\n2025\nAdministrative\n9"
+  },
+  {
+    "objectID": "narratives/01-dnf-categorisation.html#findings",
+    "href": "narratives/01-dnf-categorisation.html#findings",
+    "title": "DNF Cause Categorisation",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nDoes Year 1 show higher mechanical share?\nDirectionally yes — but most retirements lack a descriptive cause\n\n\nIs there a clear downward trend across era years?\nApparent, but masked by data quality\n\n\nWhich season had the most collision DNFs?\nInconclusive — dataset insufficient from 2024 onward\n\n\nWhat share of DNFs are “Unknown” (Retired, no cause)?\nThe vast majority — rendering year-on-year comparison unreliable\n\n\n\nVerdict: Inconclusive — data source insufficient.\nFastF1 status strings degrade significantly from 2023 onward. In 2024 and 2025, virtually all retirements record as a generic “Retired” with no attributed cause. The 2022 data is credible (52% Mechanical / 48% Collision), but a year-on-year trend cannot be established from this source alone."
+  },
+  {
+    "objectID": "narratives/01-dnf-categorisation.html#limitation-and-next-steps",
+    "href": "narratives/01-dnf-categorisation.html#limitation-and-next-steps",
+    "title": "DNF Cause Categorisation",
+    "section": "Limitation and next steps",
+    "text": "Limitation and next steps\nThe analysis infrastructure (src/analysis/dnf_categorisation.py) is built and correct — the data source is the constraint. To test this narrative properly would require a manually curated source such as motorsport-reference.com race reports that retain cause-of-retirement detail for every season.\nThis narrative is retained on the site for transparency about what was attempted, but no chart is shown as the data does not support a reliable visualisation."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "F1 Analytics",
+    "section": "",
+    "text": "This site presents data-driven analysis of Formula 1 racing across the 2022–2026 regulation eras. The primary focus is the Ground Effect Era (2022–2025) and how the 2026 Era compares at the equivalent stage — same metrics, same lens, one regulation cycle apart.\nEach narrative page tests a widely-held piece of received F1 wisdom against the numbers, reports what the data actually shows, and is honest about where the sample is too small to draw conclusions."
+  },
+  {
+    "objectID": "index.html#about-this-project",
+    "href": "index.html#about-this-project",
+    "title": "F1 Analytics",
+    "section": "",
+    "text": "This site presents data-driven analysis of Formula 1 racing across the 2022–2026 regulation eras. The primary focus is the Ground Effect Era (2022–2025) and how the 2026 Era compares at the equivalent stage — same metrics, same lens, one regulation cycle apart.\nEach narrative page tests a widely-held piece of received F1 wisdom against the numbers, reports what the data actually shows, and is honest about where the sample is too small to draw conclusions."
+  },
+  {
+    "objectID": "index.html#data-coverage",
+    "href": "index.html#data-coverage",
+    "title": "F1 Analytics",
+    "section": "Data coverage",
+    "text": "Data coverage\n\n\n\n\n\n\n\nDataset\nRows\nLast exported\n\n\n\n\nChampionship Trajectory\n920\n2026-04-06\n\n\nOvertake Index By Race\n92\n2026-04-06\n\n\nPit Excitement By Race\n21\n2026-04-06\n\n\nResults 2022 2025\n1,838\n2026-04-06\n\n\nResults 2026\n66\n2026-04-06\n\n\nRetirement By Era\n4\n2026-04-06\n\n\nSc Summary By Race\n92\n2026-04-06\n\n\n\n\n\nSource: FastF1 v3.8.2 · OpenF1 REST API Last updated: 2026-04-06 2026 rounds completed: Australia (R1), China (R2), Japan (R3) — next: Miami GP (~May 2026)\n\nBahrain and Saudi Arabia (April 2026) cancelled due to regional conflict."
+  },
+  {
+    "objectID": "index.html#narratives",
+    "href": "index.html#narratives",
+    "title": "F1 Analytics",
+    "section": "Narratives",
+    "text": "Narratives\nSeven hypotheses tested against the data. Each page states the received wisdom, defines the metric, shows the chart, and delivers a verdict.\n\n\n\n#\nNarrative\nVerdict\n\n\n\n\n1\nDNF Cause Categorisation\nInconclusive — data insufficient\n\n\n2\nFerrari Always Bottles It\nNot supported (2 seasons only)\n\n\n3\nMonaco Produces Processional Races\nPartially supported\n\n\n4\nSafety Car Lottery\nSupported\n\n\n5\nDRS Made Overtaking Artificial\nNot supported (3 rounds only)\n\n\n6\nRaces Are More Exciting Before the Pit Stop\nPartially supported — era-specific\n\n\n7\nTurn 1 Chaos in Regulation Reset Years\nSupported"
+  },
+  {
+    "objectID": "index.html#era-reference",
+    "href": "index.html#era-reference",
+    "title": "F1 Analytics",
+    "section": "Era reference",
+    "text": "Era reference\n\n\n\n\n\n\n\n\nEra\nYears\nKey change\n\n\n\n\nGround Effect Era\n2022–2025\nCost cap, ground effect aero, 18” tyres\n\n\n2026 Era\n2026–\nNew PU regs, active aero, current season\n\n\n\nAnalysis of convergence tracks gap metrics by year within era (Year 1, Year 2…) rather than calendar year, so 2022 and 2026 are directly comparable as regulation reset years."
+  },
+  {
+    "objectID": "narratives/02-ferrari-trajectory.html",
+    "href": "narratives/02-ferrari-trajectory.html",
+    "title": "Ferrari Championship Trajectory",
+    "section": "",
+    "text": "“Ferrari always bottles it — they consistently squander strong championship positions as the season progresses.”\n\nThe full version of this hypothesis (championship lead conversion rate across all seasons) requires historical data beyond our 2022–2026 scope. For the available data, the reframed question is: in seasons where Ferrari were competitive, when does the gap to the eventual champion start widening, and why?"
+  },
+  {
+    "objectID": "narratives/02-ferrari-trajectory.html#the-narrative",
+    "href": "narratives/02-ferrari-trajectory.html#the-narrative",
+    "title": "Ferrari Championship Trajectory",
+    "section": "",
+    "text": "“Ferrari always bottles it — they consistently squander strong championship positions as the season progresses.”\n\nThe full version of this hypothesis (championship lead conversion rate across all seasons) requires historical data beyond our 2022–2026 scope. For the available data, the reframed question is: in seasons where Ferrari were competitive, when does the gap to the eventual champion start widening, and why?"
+  },
+  {
+    "objectID": "narratives/02-ferrari-trajectory.html#method",
+    "href": "narratives/02-ferrari-trajectory.html#method",
+    "title": "Ferrari Championship Trajectory",
+    "section": "Method",
+    "text": "Method\nCumulative constructor points are tracked round by round. The gap to the championship leader is computed at each round. Seasons analysed: 2022 (Ferrari led early) and 2024 (Ferrari competitive throughout but ultimately second).\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport plotly.graph_objects as go\nimport scripts.export_data as exp\n\ngap_df = exp.read('championship_trajectory')\n\nFERRARI_SEASONS = [2022, 2024]\nferrari = gap_df[\n    (gap_df['constructor_id'] == 'ferrari') &\n    (gap_df['season'].isin(FERRARI_SEASONS))\n].copy()\n\n# Top 3 competitors per season for context\ntop_constructors = (\n    gap_df[gap_df['season'].isin(FERRARI_SEASONS)]\n    .groupby(['season', 'constructor_id'])['cumulative_points']\n    .max()\n    .reset_index()\n    .sort_values(['season', 'cumulative_points'], ascending=[True, False])\n    .groupby('season')\n    .head(4)\n)\n\n\n\n\nShow code\nSEASON_COLOURS = {2022: '#E8002D', 2024: '#FF6B35'}\nCOMPETITOR_COLOURS = ['#636EFA', '#00CC96', '#AB63FA', '#FFA15A']\n\nfig = go.Figure()\n\nfor season in FERRARI_SEASONS:\n    s = ferrari[ferrari['season'] == season].sort_values('round')\n    fig.add_trace(go.Scatter(\n        x=s['round'],\n        y=s['gap_to_leader'],\n        mode='lines+markers',\n        name=f'Ferrari {season}',\n        line=dict(color=SEASON_COLOURS[season], width=3),\n        marker=dict(size=6),\n        hovertemplate=(\n            f'&lt;b&gt;Ferrari {season}&lt;/b&gt;&lt;br&gt;'\n            'Round %{x}&lt;br&gt;'\n            'Gap to leader: %{y} pts&lt;extra&gt;&lt;/extra&gt;'\n        ),\n    ))\n\n    # Add top competitors for context (excluding Ferrari itself)\n    season_top = top_constructors[\n        (top_constructors['season'] == season) &\n        (top_constructors['constructor_id'] != 'ferrari')\n    ]['constructor_id'].tolist()\n\n    for j, cid in enumerate(season_top[:2]):\n        comp = gap_df[\n            (gap_df['season'] == season) &\n            (gap_df['constructor_id'] == cid)\n        ].sort_values('round')\n        cname = comp['constructor_name'].iloc[0] if len(comp) else cid\n        fig.add_trace(go.Scatter(\n            x=comp['round'],\n            y=comp['gap_to_leader'],\n            mode='lines',\n            name=f'{cname} {season}',\n            line=dict(color=COMPETITOR_COLOURS[j], width=1.5, dash='dot'),\n            opacity=0.6,\n            hovertemplate=(\n                f'&lt;b&gt;{cname} {season}&lt;/b&gt;&lt;br&gt;'\n                'Round %{x}&lt;br&gt;'\n                'Gap to leader: %{y} pts&lt;extra&gt;&lt;/extra&gt;'\n            ),\n        ))\n\nfig.update_layout(\n    title='Ferrari Championship Gap to Leader — 2022 & 2024',\n    xaxis_title='Round',\n    yaxis_title='Points behind leader',\n    yaxis=dict(autorange='reversed'),\n    template='plotly_dark',\n    legend=dict(\n        orientation='h',\n        yanchor='top',\n        y=-0.15,\n        xanchor='center',\n        x=0.5,\n    ),\n    height=540,\n    margin=dict(b=120),\n)\nfig.show()\n\n\n                            \n                                            \nFerrari’s cumulative gap to the championship leader by round. Zero = Ferrari are leading; positive = points behind the leader."
+  },
+  {
+    "objectID": "narratives/02-ferrari-trajectory.html#findings",
+    "href": "narratives/02-ferrari-trajectory.html#findings",
+    "title": "Ferrari Championship Trajectory",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nIn 2022, at which round did Ferrari’s gap start widening?\nRound 5 — but this followed early Red Bull reliability failures; Ferrari led the championship to that point\n\n\nIn 2024, at which round did Ferrari’s gap start widening?\nRound 3, then again around Round 7–8; Ferrari recovered from Round 18 onward\n\n\nHow does Ferrari’s decline compare to other competitors?\n2022: similar to Mercedes as Red Bull pulled away from the entire field; 2024: Ferrari were second-best for most of the season behind Red Bull, then eventual winners McLaren\n\n\nIs there a consistent pattern?\nNo — the two seasons show very different trajectories\n\n\n\nVerdict: Not supported — on two seasons of data.\nIn 2022, Ferrari’s gap widened because Red Bull achieved dominant pace after early reliability issues — the same happened to every other constructor. In 2024, Ferrari were genuinely competitive and finished second in the Constructors’ Championship. Neither season supports the “bottles it” narrative in isolation. Two seasons is directional only.\nDeferred: The full championship lead conversion rate analysis — across seasons where Ferrari led at mid-season — requires pre-2022 historical data. See v0.7.0 backlog."
+  },
+  {
+    "objectID": "narratives/04-safety-car.html",
+    "href": "narratives/04-safety-car.html",
+    "title": "Safety Car Lottery",
+    "section": "",
+    "text": "“The safety car is a lottery — its timing is arbitrary and disproportionately reshuffles the field, benefiting drivers who happened to pit just before deployment and penalising those who just pitted or were running long.”\n\nThe hypothesis predicts that races with safety car deployments show materially different position change patterns to clean races — and that more deployments compound the effect."
+  },
+  {
+    "objectID": "narratives/04-safety-car.html#the-narrative",
+    "href": "narratives/04-safety-car.html#the-narrative",
+    "title": "Safety Car Lottery",
+    "section": "",
+    "text": "“The safety car is a lottery — its timing is arbitrary and disproportionately reshuffles the field, benefiting drivers who happened to pit just before deployment and penalising those who just pitted or were running long.”\n\nThe hypothesis predicts that races with safety car deployments show materially different position change patterns to clean races — and that more deployments compound the effect."
+  },
+  {
+    "objectID": "narratives/04-safety-car.html#method",
+    "href": "narratives/04-safety-car.html#method",
+    "title": "Safety Car Lottery",
+    "section": "Method",
+    "text": "Method\nDistinct SC, VSC, and red flag deployment events are counted per race from FastF1 race control messages. These are then correlated with the overtake index (positions gained ÷ starters) for each race.\nData covers 2022–2025 (92 races).\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport plotly.graph_objects as go\nimport scripts.export_data as exp\nfrom src.analysis.safety_car import sc_lottery_summary, intervention_frequency, sc_counts_per_race\n\nsc_impact = exp.read('sc_summary_by_race')\nresults_df = exp.read('results_2022_2025')\nsc_df = sc_counts_per_race(results_df)\n\nfreq = intervention_frequency(sc_df)\nprint(\"SC deployment frequency by season:\")\nprint(freq[['season', 'total_races', 'sc_races', 'sc_rate']].to_string(index=False))\n\n\nSC deployment frequency by season:\n season  total_races  sc_races  sc_rate\n   2022           22        16    0.727\n   2023           22        13    0.591\n   2024           24         8    0.333\n   2025           24        12    0.500\n\n\n\n\nShow code\nfrom src.analysis.safety_car import sc_lottery_summary\n\nsummary = sc_lottery_summary(sc_impact)\n\nfig_left = go.Bar(\n    x=summary['sc_group'],\n    y=summary['mean_overtake_index'],\n    marker_color=['#2196F3', '#FF9800', '#F44336'],\n    text=summary['mean_overtake_index'].round(3),\n    textposition='outside',\n    customdata=summary['races'].values,\n    hovertemplate=(\n        '&lt;b&gt;%{x}&lt;/b&gt;&lt;br&gt;'\n        'Mean overtake index: %{y:.3f}&lt;br&gt;'\n        'Races: %{customdata}&lt;extra&gt;&lt;/extra&gt;'\n    ),\n    name='Mean OI',\n)\n\nseasons = sorted(sc_impact['season'].unique())\njitter_x = sc_impact['sc_count'].values\nfig_right = go.Scatter(\n    x=jitter_x,\n    y=sc_impact['overtake_index'],\n    mode='markers',\n    marker=dict(\n        color=sc_impact['season'],\n        colorscale='Viridis',\n        size=7,\n        opacity=0.7,\n        colorbar=dict(\n            title='Season',\n            x=1.0,\n            tickvals=seasons,\n            ticktext=[str(s) for s in seasons],\n        ),\n    ),\n    customdata=sc_impact[['race_name', 'season', 'round']].values,\n    hovertemplate=(\n        '&lt;b&gt;%{customdata[0]}&lt;/b&gt;&lt;br&gt;'\n        '%{customdata[1]} R%{customdata[2]}&lt;br&gt;'\n        'SC count: %{x}&lt;br&gt;'\n        'Overtake index: %{y:.3f}&lt;extra&gt;&lt;/extra&gt;'\n    ),\n    name='Per race',\n    showlegend=False,\n)\n\nfrom plotly.subplots import make_subplots\nfig = make_subplots(\n    rows=1, cols=2,\n    subplot_titles=['Mean Overtake Index by SC Group', 'Per-Race Scatter'],\n)\n\nfig.add_trace(fig_left, row=1, col=1)\nfig.add_trace(fig_right, row=1, col=2)\n\nfig.update_layout(\n    title=dict(\n        text='Safety Car Lottery — Overtake Index vs SC Deployments (2022–2025)',\n        y=0.97,\n        yanchor='top',\n    ),\n    template='plotly_dark',\n    height=500,\n    margin=dict(t=80),\n    showlegend=False,\n)\nfig.update_yaxes(title_text='Overtake index', row=1, col=1)\nfig.update_yaxes(title_text='Overtake index', row=1, col=2)\nfig.update_xaxes(title_text='SC group', row=1, col=1)\nfig.update_xaxes(title_text='SC deployments', row=1, col=2)\nfig.show()\n\n\n                            \n                                            \nLeft: mean overtake index by SC deployment count. Right: per-race scatter of overtake index vs SC count."
+  },
+  {
+    "objectID": "narratives/04-safety-car.html#findings",
+    "href": "narratives/04-safety-car.html#findings",
+    "title": "Safety Car Lottery",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nSC deployment rate across 2022–2025?\nHigh overall — peaked at 73% in 2022, fell to 33% in 2024, rose to 50% in 2025\n\n\nDo SC races produce more position changes than clean races?\nYes — mean overtake index rises from 1.487 (0 SCs) to 1.767 (1 SC)\n\n\nDoes a second SC add further position change activity?\nYes — 2+ SCs reaches 2.131, a clear step above 1 SC\n\n\nIs the “lottery” narrative supported?\nYes\n\n\n\nVerdict: Supported.\nEach additional safety car deployment correlates with a measurable increase in position change activity, and the effect compounds. A race with two or more safety cars produces 43% more position changes per starter than a clean race (2.131 vs 1.487).\nThe 2022 season — with a 73% SC rate — stands out as particularly intervention-heavy, likely reflecting teams’ unfamiliarity with the new ground effect cars producing more incidents. The declining rate through 2024 may reflect stricter deployment thresholds, faster incident clearance, or simply fewer incidents as teams converged on safer setups.\nThe data supports the “lottery” framing: SC timing reshuffles the field in ways that are uncorrelated with underlying race pace."
+  },
+  {
+    "objectID": "narratives/06-pit-stop-excitement.html",
+    "href": "narratives/06-pit-stop-excitement.html",
+    "title": "Pit Stop Excitement",
+    "section": "",
+    "text": "“Races are more exciting before the pit stop — the first half of a Grand Prix, with cars on original tyres and natural degradation, produces closer racing than the post-stop phase, where fresh tyres spread the field.”\n\nThe hypothesis predicts the pre-pit-stop phase shows more position change activity per lap than the post-stop phase."
+  },
+  {
+    "objectID": "narratives/06-pit-stop-excitement.html#the-narrative",
+    "href": "narratives/06-pit-stop-excitement.html#the-narrative",
+    "title": "Pit Stop Excitement",
+    "section": "",
+    "text": "“Races are more exciting before the pit stop — the first half of a Grand Prix, with cars on original tyres and natural degradation, produces closer racing than the post-stop phase, where fresh tyres spread the field.”\n\nThe hypothesis predicts the pre-pit-stop phase shows more position change activity per lap than the post-stop phase."
+  },
+  {
+    "objectID": "narratives/06-pit-stop-excitement.html#method",
+    "href": "narratives/06-pit-stop-excitement.html#method",
+    "title": "Pit Stop Excitement",
+    "section": "Method",
+    "text": "Method\nFor each full-length Grand Prix (sprint weekends excluded), the median first pit lap across all drivers is used as the phase boundary. Position changes per lap are computed separately for the pre- and post-stop phases.\nSeasons analysed: 2022 (17 non-sprint races) and 2026 (2 non-sprint races: Australia and Japan — China was a sprint weekend).\n\n\nShow code\nimport sys\nsys.path.insert(0, '../..')\n\nimport pandas as pd\nimport plotly.graph_objects as go\nimport scripts.export_data as exp\n\nexcitement = exp.read('pit_excitement_by_race')\n\nera_summary = excitement.groupby('era').agg(\n    races=('pre_positions_gained_per_lap', 'count'),\n    mean_pre=('pre_positions_gained_per_lap', 'mean'),\n    mean_post=('post_positions_gained_per_lap', 'mean'),\n).reset_index().round(3)\n\nprint(era_summary.to_string(index=False))\n\n\n                     era  races  mean_pre  mean_post\n                2026 Era      2     4.052      1.144\nGround Effect Era (2022)     17     2.592      2.556\n\n\n\n\nShow code\nresults_df = exp.read('results_2022_2025')\nresults_2026 = exp.read('results_2026')\nrace_names_2022 = (\n    results_df[['season', 'round', 'race_name']]\n    .drop_duplicates()\n)\nrace_names_2026 = (\n    results_2026[['season', 'round', 'race_name']]\n    .drop_duplicates()\n)\nrace_names = pd.concat([race_names_2022, race_names_2026])\n\nplot_df = excitement.merge(race_names, on=['season', 'round'], how='left')\n\nERA_COLOURS = {'Ground Effect Era (2022)': '#636EFA', '2026 Era': '#FF6B35'}\n\nfig = go.Figure()\n\nfor era, colour in ERA_COLOURS.items():\n    sub = plot_df[plot_df['era'] == era]\n    fig.add_trace(go.Scatter(\n        x=sub['pre_positions_gained_per_lap'],\n        y=sub['post_positions_gained_per_lap'],\n        mode='markers',\n        name=era,\n        marker=dict(color=colour, size=10, opacity=0.85),\n        customdata=sub[['race_name', 'season', 'round', 'split_lap']].values,\n        hovertemplate=(\n            '&lt;b&gt;%{customdata[0]}&lt;/b&gt;&lt;br&gt;'\n            '%{customdata[1]} R%{customdata[2]}&lt;br&gt;'\n            'Split lap: %{customdata[3]:.0f}&lt;br&gt;'\n            'Pre-stop: %{x:.3f} pos/lap&lt;br&gt;'\n            'Post-stop: %{y:.3f} pos/lap&lt;extra&gt;&lt;/extra&gt;'\n        ),\n    ))\n\n# Diagonal parity line (pre = post)\nmax_val = max(\n    plot_df['pre_positions_gained_per_lap'].max(),\n    plot_df['post_positions_gained_per_lap'].max(),\n) * 1.05\nfig.add_shape(\n    type='line', x0=0, y0=0, x1=max_val, y1=max_val,\n    line=dict(color='white', dash='dash', width=1),\n)\nfig.add_annotation(\n    x=max_val * 0.7, y=max_val * 0.7,\n    text='pre = post', showarrow=False,\n    font=dict(color='white', size=10), opacity=0.5,\n    textangle=-45,\n)\n\nfig.update_layout(\n    title='Pre vs Post Pit Stop Position Changes per Lap',\n    xaxis_title='Pre-stop: positions gained per lap',\n    yaxis_title='Post-stop: positions gained per lap',\n    template='plotly_dark',\n    height=480,\n    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),\n)\nfig.show()\n\n\n                            \n                                            \nPre vs post pit stop position change activity per race. Each point is one race. Hover for circuit detail."
+  },
+  {
+    "objectID": "narratives/06-pit-stop-excitement.html#findings",
+    "href": "narratives/06-pit-stop-excitement.html#findings",
+    "title": "Pit Stop Excitement",
+    "section": "Findings",
+    "text": "Findings\n\n\n\n\n\n\n\nQuestion\nFinding\n\n\n\n\nMean positions gained per lap — pre pit stop (2022)?\n2.592 across 17 races\n\n\nMean positions gained per lap — post pit stop (2022)?\n2.556 — virtually identical\n\n\nMean positions gained per lap — pre pit stop (2026)?\n4.052 across 2 races\n\n\nMean positions gained per lap — post pit stop (2026)?\n1.144 — a dramatic drop\n\n\nIs pre-stop racing more active than post-stop?\nIn 2026 yes; in 2022 negligibly\n\n\nIs the pattern consistent across both eras?\nNo — era-specific\n\n\n\nVerdict: Partially supported — but era-specific.\nIn 2022 the pre/post split is negligible (2.592 vs 2.556 positions per lap) — the narrative does not hold for the Ground Effect Era. Racing was equally competitive in both phases.\nIn 2026 the effect is dramatic: pre-stop racing produces 3.5× more position changes per lap than the post-stop phase (4.052 vs 1.144). Points above the diagonal line on the chart would suggest post-stop is more active — instead all 2026 races fall well below it.\nThis may reflect 2026 tyre characteristics — the Hard compound appears to produce very processional post-stop racing. However, only 2 non-sprint 2026 races are in the sample (Australia and Japan). This finding is directional only and must be revisited as Miami and subsequent rounds are added."
+  }
+]
