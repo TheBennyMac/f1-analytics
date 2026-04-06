@@ -27,21 +27,34 @@ def _is_dnf(status: str) -> bool:
     return True
 
 
-def first_lap_retirements(results_df: pd.DataFrame) -> pd.DataFrame:
+def first_lap_retirements(
+    results_df: pd.DataFrame,
+    season_laps: dict | None = None,
+    lap_threshold: int = 2,
+) -> pd.DataFrame:
     """Return first-lap retirement rate per race and by era year.
 
     A first-lap retirement is a driver who:
     - Had a valid grid position (started the race)
     - Did not finish (DNF status)
-    - Has a finish_position of None (did not complete enough laps to classify)
+    - Completed at most `lap_threshold` laps (when season_laps provided),
+      or has a null finish_position (fallback when no lap data is available)
 
-    This is a proxy for Turn 1 and early-lap incidents. It cannot distinguish
-    a Turn 1 collision from a lap 3 mechanical, but non-classified DNFs are
-    more likely to reflect early incidents than classified retirements.
+    FastF1 assigns finishing positions 1-20 to all drivers including DNFs, so
+    finish_position alone cannot detect early retirements. When season_laps is
+    provided, max laps completed is used as the primary filter (≤ lap_threshold).
+    Without lap data the null finish_position fallback applies, which is accurate
+    for manually-constructed test data but not for real FastF1 results.
 
     Args:
         results_df: DataFrame with columns [season, round, race_name,
                     driver_id, grid_position, finish_position, status].
+        season_laps: Optional dict mapping (season, round) → FastF1 laps
+                     DataFrame. When provided, laps completed per driver is
+                     used to identify early retirements.
+        lap_threshold: Maximum laps completed to count as a first-lap DNF.
+                       Default 2 captures lap 1 incidents plus cars that
+                       limped to the pits immediately after.
 
     Returns:
         DataFrame with columns [season, round, race_name, era_year,
@@ -61,6 +74,15 @@ def first_lap_retirements(results_df: pd.DataFrame) -> pd.DataFrame:
     if missing:
         raise ValueError(f"results_df missing columns: {missing}")
 
+    # Build a lookup of max laps completed per (season, round, driver_id)
+    # when lap data is supplied.
+    laps_completed: dict[tuple, int] = {}
+    if season_laps:
+        for (s, r), laps_df in season_laps.items():
+            if "Driver" in laps_df.columns and "LapNumber" in laps_df.columns:
+                for driver, max_lap in laps_df.groupby("Driver")["LapNumber"].max().items():
+                    laps_completed[(s, r, driver)] = int(max_lap)
+
     records = []
     for (season, round_, race_name), group in results_df.groupby(
         ["season", "round", "race_name"]
@@ -71,11 +93,21 @@ def first_lap_retirements(results_df: pd.DataFrame) -> pd.DataFrame:
         if n_starters == 0:
             continue
 
-        first_lap_dnfs = starters[
-            starters["status"].apply(_is_dnf) &
-            starters["finish_position"].isna()
-        ]
-        n_dnfs = len(first_lap_dnfs)
+        def _is_first_lap_dnf(row: pd.Series) -> bool:
+            if not _is_dnf(row["status"]):
+                return False
+            if laps_completed:
+                completed = laps_completed.get((season, round_, row["driver_id"]))
+                if completed is not None:
+                    return completed <= lap_threshold
+                # Driver not in lap data — fall back to finish_position
+            return row["finish_position"] is None or (
+                hasattr(row["finish_position"], "__float__") and
+                pd.isna(row["finish_position"])
+            )
+
+        first_lap_dnf_mask = starters.apply(_is_first_lap_dnf, axis=1)
+        n_dnfs = int(first_lap_dnf_mask.sum())
 
         try:
             era_year = get_year_within_era(int(season))

@@ -111,6 +111,38 @@ class TestFirstLapRetirements:
         result = first_lap_retirements(df)
         assert result.empty
 
+    def test_season_laps_filters_by_lap_count(self):
+        # Simulate FastF1 behaviour: all 20 drivers get a finish_position,
+        # even if they retired on lap 1. Without season_laps the function
+        # would see no NaN finish_positions and return 0 DNFs.
+        # With season_laps, the driver who only completed 1 lap is flagged.
+        df = _make_results([
+            {"driver_id": "VER", "finish_position": 1, "status": "Finished"},
+            {"driver_id": "ZHO", "finish_position": 19, "status": "Collision"},
+        ])
+        laps = pd.DataFrame([
+            {"Driver": "VER", "LapNumber": i} for i in range(1, 21)
+        ] + [
+            {"Driver": "ZHO", "LapNumber": 1},  # retired after 1 lap
+        ])
+        season_laps = {(2022, 1): laps}
+        result = first_lap_retirements(df, season_laps=season_laps)
+        assert result.iloc[0]["first_lap_dnfs"] == 1
+
+    def test_season_laps_does_not_count_late_dnf(self):
+        # Driver who retired on lap 45 should NOT count as first-lap DNF
+        df = _make_results([
+            {"driver_id": "VER", "finish_position": 1, "status": "Finished"},
+            {"driver_id": "LEC", "finish_position": 18, "status": "Engine"},
+        ])
+        laps = pd.DataFrame(
+            [{"Driver": "VER", "LapNumber": i} for i in range(1, 51)]
+            + [{"Driver": "LEC", "LapNumber": i} for i in range(1, 46)]
+        )
+        season_laps = {(2022, 1): laps}
+        result = first_lap_retirements(df, season_laps=season_laps)
+        assert result.iloc[0]["first_lap_dnfs"] == 0
+
 
 class TestLap1PositionChanges:
     def test_returns_correct_keys(self):
