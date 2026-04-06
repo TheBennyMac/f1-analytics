@@ -5,6 +5,8 @@ from src.analysis.pit_window import (
     median_pit_lap,
     lap_time_deltas_by_phase,
     pit_window_summary,
+    position_changes_by_phase,
+    pit_excitement_summary,
 )
 
 
@@ -154,3 +156,118 @@ class TestPitWindowSummary:
         expected = {"season", "round", "split_lap", "pre_mean_gap_s", "post_mean_gap_s",
                     "pre_laps", "post_laps"}
         assert set(result.columns) == expected
+
+
+def _make_position_laps(rows: list[dict]) -> pd.DataFrame:
+    """Build a laps DataFrame with Position data for testing."""
+    defaults = {
+        "LapNumber": 1, "Driver": "VER", "Position": 1,
+        "PitInLap": False, "PitOutLap": False,
+    }
+    return pd.DataFrame([{**defaults, **r} for r in rows])
+
+
+class TestPositionChangesByPhase:
+    def _laps(self) -> pd.DataFrame:
+        """3 drivers, 10 laps, positions shift over time."""
+        rows = []
+        for lap in range(1, 11):
+            rows.append({"LapNumber": lap, "Driver": "VER",
+                         "Position": 1 if lap <= 5 else 2})
+            rows.append({"LapNumber": lap, "Driver": "LEC",
+                         "Position": 2 if lap <= 5 else 1})
+            rows.append({"LapNumber": lap, "Driver": "SAI",
+                         "Position": 3})
+        return _make_position_laps(rows)
+
+    def test_returns_correct_keys(self):
+        result = position_changes_by_phase(self._laps(), split_lap=6.0)
+        expected = {
+            "pre_positions_gained_per_lap",
+            "post_positions_gained_per_lap",
+            "pre_laps", "post_laps",
+        }
+        assert set(result.keys()) == expected
+
+    def test_pre_phase_has_correct_lap_count(self):
+        result = position_changes_by_phase(self._laps(), split_lap=6.0)
+        # Laps 1-5 pre; but lap 1 has no prev so 4 laps contribute
+        assert result["pre_laps"] == 4
+
+    def test_post_phase_has_correct_lap_count(self):
+        result = position_changes_by_phase(self._laps(), split_lap=6.0)
+        # Laps 6-10 post = 5 laps
+        assert result["post_laps"] == 5
+
+    def test_position_gains_detected_in_post(self):
+        # LEC gains 1 position at lap 6 (moves from P2 to P1)
+        result = position_changes_by_phase(self._laps(), split_lap=6.0)
+        assert result["post_positions_gained_per_lap"] is not None
+        assert result["post_positions_gained_per_lap"] > 0
+
+    def test_excludes_pit_in_laps(self):
+        rows = [
+            {"LapNumber": 1, "Driver": "VER", "Position": 2, "PitInLap": False},
+            {"LapNumber": 2, "Driver": "VER", "Position": 1, "PitInLap": True},
+            {"LapNumber": 3, "Driver": "VER", "Position": 1, "PitInLap": False},
+            {"LapNumber": 1, "Driver": "LEC", "Position": 1, "PitInLap": False},
+            {"LapNumber": 2, "Driver": "LEC", "Position": 2, "PitInLap": False},
+            {"LapNumber": 3, "Driver": "LEC", "Position": 2, "PitInLap": False},
+        ]
+        df = _make_position_laps(rows)
+        result = position_changes_by_phase(df, split_lap=5.0)
+        # Pit lap 2 excluded — VER's gain at lap 2 should not count
+        assert result["pre_positions_gained_per_lap"] is not None
+
+    def test_missing_position_column_returns_none(self):
+        df = pd.DataFrame({"LapNumber": [1], "Driver": ["VER"]})
+        result = position_changes_by_phase(df, split_lap=5.0)
+        assert result["pre_positions_gained_per_lap"] is None
+        assert result["post_positions_gained_per_lap"] is None
+
+    def test_empty_dataframe_returns_none_rates(self):
+        df = _make_position_laps([])
+        result = position_changes_by_phase(df, split_lap=5.0)
+        assert result["pre_positions_gained_per_lap"] is None
+        assert result["post_positions_gained_per_lap"] is None
+
+
+class TestPitExcitementSummary:
+    def _season_laps(self) -> dict:
+        rows_r1 = []
+        rows_r2 = []
+        for lap in range(1, 11):
+            for driver, pos in [("VER", 1), ("LEC", 2), ("SAI", 3)]:
+                pit = lap == 6
+                rows_r1.append({
+                    "LapNumber": lap, "Driver": driver,
+                    "Position": pos, "PitInLap": pit, "PitOutLap": False,
+                    "LapTime": pd.Timedelta(seconds=90),
+                })
+                rows_r2.append({
+                    "LapNumber": lap, "Driver": driver,
+                    "Position": pos, "PitInLap": pit, "PitOutLap": False,
+                    "LapTime": pd.Timedelta(seconds=92),
+                })
+        return {
+            (2022, 1): pd.DataFrame(rows_r1),
+            (2022, 2): pd.DataFrame(rows_r2),
+        }
+
+    def test_returns_correct_columns(self):
+        result = pit_excitement_summary(self._season_laps())
+        expected = {
+            "season", "round", "split_lap",
+            "pre_positions_gained_per_lap",
+            "post_positions_gained_per_lap",
+            "pre_laps", "post_laps",
+        }
+        assert set(result.columns) == expected
+
+    def test_one_row_per_race(self):
+        result = pit_excitement_summary(self._season_laps())
+        assert len(result) == 2
+
+    def test_empty_input_returns_empty_dataframe(self):
+        result = pit_excitement_summary({})
+        assert result.empty
