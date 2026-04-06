@@ -36,7 +36,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 NOTEBOOKS_DIR = ROOT / "notebooks"
 SITE_DIR = ROOT / "site"
-DOCS_DIR = SITE_DIR / "docs"
+DOCS_DIR = ROOT / "docs"
 MANIFEST_PATH = ROOT / "data" / "computed" / "manifest.json"
 
 NOTEBOOK_02 = NOTEBOOKS_DIR / "02_2026_era_year1.ipynb"
