@@ -9,6 +9,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.5.6] — 2026-04-06
+
+### Added
+
+- `src/analysis/turn1.py` — Turn 1 chaos analysis:
+  - `first_lap_retirements()` — first-lap DNF rate per race, grouped by
+    era year; accepts optional `season_laps` dict to detect early retirements
+    by lap count (FastF1 assigns positions 1–20 to all drivers, so
+    `finish_position` alone cannot identify lap 1 retirements)
+  - `lap1_position_changes()` — positions gained on lap 1 vs grid position
+  - `turn1_summary_by_era_year()` — aggregates DNF metrics by year-within-era
+- `tests/test_turn1.py` — 25 tests (287 total passing)
+- `src/analysis/__init__.py` — turn1 module exported
+- `notebooks/04_narrative_testing.ipynb` — Section 7: Turn 1 chaos
+  - First-lap retirement rate by era year (bar chart)
+  - DNS count by era year (bar chart — shows opposite pattern to DNFs)
+  - Findings and verdict documented
+
+### Fixed
+
+- `first_lap_retirements()` — initial implementation used `finish_position.isna()`
+  which never fires with real FastF1 data; replaced with lap count threshold
+  (≤ 2 laps completed) when `season_laps` is provided
+
+### Analysis
+
+- Year 1 (2022): 9 first-lap DNFs across 22 races — mean rate 2.1%
+- Years 2–4: 3–4 DNFs per season — mean rate 0.6–0.9%
+- Rate falls monotonically; stabilises by Year 3
+- DNS events could not be measured — FastF1 excludes non-starters from
+  session results entirely
+- **Narrative verdict: supported** — first-lap chaos is measurably higher
+  in the regulation reset year; converges rapidly as the era matures
+
+### Milestone
+
+- **v0.5.0 Narrative Testing milestone complete** — all seven narratives
+  tested and documented in `notebooks/04_narrative_testing.ipynb`
+
+---
+
 ## [v0.5.5] — 2026-04-06
 
 ### Added

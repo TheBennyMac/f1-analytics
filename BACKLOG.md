@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.5.5 (Narrative Testing: Pit Stop Excitement)
+## Current Version: v0.5.6 (Narrative Testing: Turn 1 Chaos — v0.5.0 milestone complete)
 
 ### Scope Decision (2026-03-31)
 
@@ -127,8 +127,12 @@
     split in 2022 (2.592 vs 2.556 positions/lap); dramatic in 2026
     (4.052 vs 1.144). 2026 Hard tyres appear to produce processional
     post-stop racing. Only 2 non-sprint 2026 races; directional only.
-- [ ] "Turn 1 chaos is worse in regulation reset years" — compare
+- [x] "Turn 1 chaos is worse in regulation reset years" — compare
     first-lap incidents and retirements in Year 1 vs Year 2+ of each era
+  - **Verdict: supported** — Year 1 (2022) first-lap DNF rate ~3.5× higher
+    than Years 2–4 (2.1% vs 0.6–0.9%); rate falls monotonically and
+    stabilises by Year 3. DNS data not available from FastF1 (drivers
+    excluded from session results entirely).
 - [x] DNF cause categorisation — module built, narrative tested
   - **Verdict: inconclusive — data source insufficient**
   - FastF1 status strings degrade significantly from 2023 onward;
