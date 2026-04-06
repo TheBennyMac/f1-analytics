@@ -1,0 +1,140 @@
+---
+title: "Ferrari Championship Trajectory"
+subtitle: "Does Ferrari consistently squander strong championship positions?"
+---
+
+## The narrative
+
+> *"Ferrari always bottles it — they consistently squander strong championship positions
+> as the season progresses."*
+
+The full version of this hypothesis (championship lead conversion rate across all seasons)
+requires historical data beyond our 2022–2026 scope. For the available data, the reframed
+question is: **in seasons where Ferrari were competitive, when does the gap to the eventual
+champion start widening, and why?**
+
+---
+
+## Method
+
+Cumulative constructor points are tracked round by round. The gap to the championship leader
+is computed at each round. Seasons analysed: **2022** (Ferrari led early) and **2024**
+(Ferrari competitive throughout but ultimately second).
+
+```{python}
+import sys
+sys.path.insert(0, '../..')
+
+import pandas as pd
+import plotly.graph_objects as go
+import scripts.export_data as exp
+
+gap_df = exp.read('championship_trajectory')
+
+FERRARI_SEASONS = [2022, 2024]
+ferrari = gap_df[
+    (gap_df['constructor_id'] == 'ferrari') &
+    (gap_df['season'].isin(FERRARI_SEASONS))
+].copy()
+
+# Top 3 competitors per season for context
+top_constructors = (
+    gap_df[gap_df['season'].isin(FERRARI_SEASONS)]
+    .groupby(['season', 'constructor_id'])['cumulative_points']
+    .max()
+    .reset_index()
+    .sort_values(['season', 'cumulative_points'], ascending=[True, False])
+    .groupby('season')
+    .head(4)
+)
+```
+
+```{python}
+#| fig-cap: "Ferrari's cumulative gap to the championship leader by round. Zero = Ferrari are leading; positive = points behind the leader."
+
+SEASON_COLOURS = {2022: '#E8002D', 2024: '#FF6B35'}
+COMPETITOR_COLOURS = ['#636EFA', '#00CC96', '#AB63FA', '#FFA15A']
+
+fig = go.Figure()
+
+for season in FERRARI_SEASONS:
+    s = ferrari[ferrari['season'] == season].sort_values('round')
+    fig.add_trace(go.Scatter(
+        x=s['round'],
+        y=s['gap_to_leader'],
+        mode='lines+markers',
+        name=f'Ferrari {season}',
+        line=dict(color=SEASON_COLOURS[season], width=3),
+        marker=dict(size=6),
+        hovertemplate=(
+            f'<b>Ferrari {season}</b><br>'
+            'Round %{x}<br>'
+            'Gap to leader: %{y} pts<extra></extra>'
+        ),
+    ))
+
+    # Add top competitors for context (excluding Ferrari itself)
+    season_top = top_constructors[
+        (top_constructors['season'] == season) &
+        (top_constructors['constructor_id'] != 'ferrari')
+    ]['constructor_id'].tolist()
+
+    for j, cid in enumerate(season_top[:2]):
+        comp = gap_df[
+            (gap_df['season'] == season) &
+            (gap_df['constructor_id'] == cid)
+        ].sort_values('round')
+        cname = comp['constructor_name'].iloc[0] if len(comp) else cid
+        fig.add_trace(go.Scatter(
+            x=comp['round'],
+            y=comp['gap_to_leader'],
+            mode='lines',
+            name=f'{cname} {season}',
+            line=dict(color=COMPETITOR_COLOURS[j], width=1.5, dash='dot'),
+            opacity=0.6,
+            hovertemplate=(
+                f'<b>{cname} {season}</b><br>'
+                'Round %{x}<br>'
+                'Gap to leader: %{y} pts<extra></extra>'
+            ),
+        ))
+
+fig.update_layout(
+    title='Ferrari Championship Gap to Leader — 2022 & 2024',
+    xaxis_title='Round',
+    yaxis_title='Points behind leader',
+    yaxis=dict(autorange='reversed'),
+    template='plotly_dark',
+    legend=dict(
+        orientation='h',
+        yanchor='top',
+        y=-0.15,
+        xanchor='center',
+        x=0.5,
+    ),
+    height=540,
+    margin=dict(b=120),
+)
+fig.show()
+```
+
+---
+
+## Findings
+
+| Question | Finding |
+|---|---|
+| In 2022, at which round did Ferrari's gap start widening? | Round 5 — but this followed early Red Bull reliability failures; Ferrari led the championship to that point |
+| In 2024, at which round did Ferrari's gap start widening? | Round 3, then again around Round 7–8; Ferrari recovered from Round 18 onward |
+| How does Ferrari's decline compare to other competitors? | 2022: similar to Mercedes as Red Bull pulled away from the entire field; 2024: Ferrari were second-best for most of the season behind Red Bull, then eventual winners McLaren |
+| Is there a consistent pattern? | No — the two seasons show very different trajectories |
+
+**Verdict: Not supported — on two seasons of data.**
+
+In 2022, Ferrari's gap widened because Red Bull achieved dominant pace after early reliability
+issues — the same happened to every other constructor. In 2024, Ferrari were genuinely
+competitive and finished second in the Constructors' Championship. Neither season supports
+the "bottles it" narrative in isolation. Two seasons is directional only.
+
+**Deferred:** The full championship lead conversion rate analysis — across seasons where
+Ferrari led at mid-season — requires pre-2022 historical data. See v0.7.0 backlog.

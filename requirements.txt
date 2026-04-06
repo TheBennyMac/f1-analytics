@@ -1,11 +1,12 @@
 # Data acquisition
-fastf1
+fastf1==3.8.2
 requests
 python-dotenv
 
 # Data processing
 pandas
 numpy
+pyarrow
 
 # Notebook & visualisation
 jupyterlab

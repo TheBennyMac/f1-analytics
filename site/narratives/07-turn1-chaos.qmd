@@ -1,0 +1,103 @@
+---
+title: "Turn 1 Chaos"
+subtitle: "Are regulation reset years more incident-prone on the opening lap?"
+---
+
+## The narrative
+
+> *"Turn 1 is where races are won and lost — and it's worse in regulation reset years.
+> Unfamiliar cars, uncertain relative pace, and aggressive positioning combine to produce
+> more first-lap chaos when the regulations change."*
+
+The hypothesis predicts that Year 1 of a new regulation era shows a higher rate of
+first-lap retirements than settled era years (Year 2+).
+
+---
+
+## Method
+
+A first-lap retirement is defined as a driver who:
+
+1. Had a valid grid position (started the race)
+2. Did not finish (DNF status)
+3. Completed at most 2 laps — capturing lap 1 incidents plus cars that limped to the pits immediately after
+
+FastF1 assigns finishing positions 1–20 to all drivers including DNFs, so lap count
+(from lap-by-lap data) is used rather than finish position to identify early retirements.
+
+Data covers **2022–2025** (92 races, all four years of the Ground Effect Era).
+
+```{python}
+import sys
+sys.path.insert(0, '../..')
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import scripts.export_data as exp
+
+retirement_by_era = exp.read('retirement_by_era')
+print(retirement_by_era.to_string(index=False))
+```
+
+```{python}
+#| fig-cap: "Mean first-lap DNF rate by year within the Ground Effect Era (2022–2025). Year 1 = 2022, Year 4 = 2025."
+
+fig, ax = plt.subplots(figsize=(8, 4))
+fig.patch.set_facecolor('#222222')
+ax.set_facecolor('#222222')
+
+colours = ['#E8002D', '#FF9800', '#4CAF50', '#4CAF50']
+bars = ax.bar(
+    retirement_by_era['era_year'].astype(str).map(lambda y: f'Year {y}'),
+    retirement_by_era['mean_dnf_rate'] * 100,
+    color=colours,
+    edgecolor='none',
+    width=0.6,
+)
+
+for bar, row in zip(bars, retirement_by_era.itertuples()):
+    ax.text(
+        bar.get_x() + bar.get_width() / 2,
+        bar.get_height() + 0.05,
+        f'{row.mean_dnf_rate * 100:.2f}%\n({row.total_first_lap_dnfs} DNFs, {row.races} races)',
+        ha='center', va='bottom', color='white', fontsize=9,
+    )
+
+ax.set_xlabel('Year within era', color='white')
+ax.set_ylabel('Mean first-lap DNF rate (%)', color='white')
+ax.set_title('First-Lap DNF Rate by Era Year — Ground Effect Era (2022–2025)', color='white', pad=16)
+ax.tick_params(colors='white')
+ax.spines[:].set_visible(False)
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.1f}%'))
+# Extra headroom so bar labels don't clip into the title
+ax.set_ylim(0, retirement_by_era['mean_dnf_rate'].max() * 100 * 1.35)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## Findings
+
+| Question | Finding |
+|---|---|
+| Is the first-lap DNF rate higher in Year 1? | **Yes** — Year 1 (2022) recorded a 2.1% mean rate, more than double any subsequent year |
+| How does Year 1 compare to Years 2–4? | ~3.5× higher: 2022 = 2.1%, 2023 = 0.9%, 2024 = 0.6%, 2025 = 0.6% |
+| Is there a convergence trend? | **Yes** — the rate falls monotonically and stabilises by Year 3 |
+| Does lap 1 position change activity support the hypothesis? | GridPosition not present in the FastF1 laps dataset — metric could not be computed |
+
+**Verdict: Supported.**
+
+First-lap retirements are clearly elevated in the regulation reset year. Year 1 (2022)
+produced a mean first-lap DNF rate of 2.1% — roughly 3.5 times the rate of Years 2–4
+(0.6–0.9%). The rate falls monotonically across the era and stabilises by Year 3,
+consistent with teams and drivers learning the limits of the new machinery.
+
+The DNS data shows an interesting counter-pattern: Year 1 had the *fewest* drivers
+failing to start, suggesting teams prioritised getting cars to the grid in the reset year
+even at some reliability cost. By Year 2, more conservative decisions about race entry
+appear in the data.
+
+**Implication for 2026:** If the pattern holds, the first-lap incident rate in 2026
+should be elevated relative to the settled Ground Effect Era years — and should decline
+by 2027–2028 as teams converge on safer setups. This will be tracked as 2026 data matures.

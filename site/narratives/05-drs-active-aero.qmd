@@ -1,0 +1,143 @@
+---
+title: "DRS vs Active Aero"
+subtitle: "Did DRS make overtaking artificial — and does 2026 show a difference?"
+---
+
+## The narrative
+
+> *"DRS made overtaking artificial — it turned genuine racing moves into highway passes
+> where the chasing driver simply drove past on the straight. Removing it should restore
+> real racing."*
+
+The hypothesis predicts that overtaking activity should be lower without DRS than with it.
+The 2026 regulation change — replacing DRS with active aerodynamics — provides a natural
+experiment, comparing Ground Effect Era (DRS on, 2022–2025) against 2026 (active aero).
+
+---
+
+## Method
+
+The overtake index is computed for every race across both eras and compared. Because 2026
+has only 3 completed rounds at the time of writing, this comparison is **directional only**.
+
+```{python}
+import sys
+sys.path.insert(0, '../..')
+
+import pandas as pd
+import plotly.graph_objects as go
+import scripts.export_data as exp
+from src.analysis.overtake_index import overtake_index_by_era
+
+race_oi_2022 = exp.read('overtake_index_by_race')
+results_2026 = exp.read('results_2026')
+
+from src.analysis.overtake_index import overtake_index_per_race
+race_oi_2026 = overtake_index_per_race(results_2026)
+
+import pandas as pd
+combined_oi = pd.concat([race_oi_2022, race_oi_2026], ignore_index=True)
+era_summary = overtake_index_by_era(combined_oi)
+print(era_summary.to_string(index=False))
+```
+
+```{python}
+#| fig-cap: "Overtake index per race coloured by era. Hover to see circuit and round detail."
+
+from src.utils.era_helper import get_era_name
+combined_oi['era'] = combined_oi['season'].apply(get_era_name)
+
+ERA_COLOURS = {
+    'Ground Effect Era': '#636EFA',
+    '2026 Era': '#FF6B35',
+}
+
+fig = go.Figure()
+
+for era, colour in ERA_COLOURS.items():
+    sub = combined_oi[combined_oi['era'] == era]
+    fig.add_trace(go.Scatter(
+        x=sub['season'],
+        y=sub['overtake_index'],
+        mode='markers',
+        name=era,
+        marker=dict(color=colour, size=8, opacity=0.8),
+        customdata=sub[['race_name', 'season', 'round', 'positions_gained', 'starters']].values,
+        hovertemplate=(
+            '<b>%{customdata[0]}</b><br>'
+            '%{customdata[1]} R%{customdata[2]}<br>'
+            'Overtake index: %{y:.3f}<br>'
+            'Positions gained: %{customdata[3]} / %{customdata[4]} starters'
+            '<extra></extra>'
+        ),
+    ))
+
+# Era mean lines — annotations offset vertically so they don't overlap
+annotation_yshifts = {'Ground Effect Era': 10, '2026 Era': -16}
+for era, colour in ERA_COLOURS.items():
+    sub = combined_oi[combined_oi['era'] == era]
+    mean_oi = sub['overtake_index'].mean()
+    x_min = sub['season'].min()
+    x_max = sub['season'].max()
+    fig.add_shape(
+        type='line',
+        x0=x_min - 0.3, x1=x_max + 0.3,
+        y0=mean_oi, y1=mean_oi,
+        line=dict(color=colour, width=2, dash='dash'),
+    )
+    fig.add_annotation(
+        x=x_max + 0.3, y=mean_oi,
+        text=f'{era} mean: {mean_oi:.3f}',
+        showarrow=False,
+        xanchor='left',
+        font=dict(color=colour, size=11),
+        yshift=annotation_yshifts[era],
+    )
+
+all_seasons = sorted(combined_oi['season'].unique())
+fig.update_layout(
+    title='Overtake Index per Race — Ground Effect Era vs 2026 (Active Aero)',
+    xaxis=dict(
+        title='Season',
+        tickvals=all_seasons,
+        ticktext=[str(s) for s in all_seasons],
+    ),
+    yaxis_title='Overtake index (positions gained / starters)',
+    template='plotly_dark',
+    height=500,
+    margin=dict(t=60, r=160, b=100),
+    legend=dict(
+        orientation='h',
+        yanchor='top',
+        y=-0.15,
+        xanchor='center',
+        x=0.5,
+    ),
+)
+fig.show()
+```
+
+---
+
+## Findings
+
+| Question | Finding |
+|---|---|
+| Mean overtake index — Ground Effect Era (DRS, 2022–2025)? | 1.688 across 92 races |
+| Mean overtake index — 2026 Era (active aero, 3 rounds)? | 1.874 across 3 rounds |
+| Does removing DRS appear to reduce position changes? | No — 2026 shows a *higher* index |
+| Is the "DRS made overtaking artificial" narrative supported? | Not supported |
+
+**Verdict: Not supported — on 3 rounds of data.**
+
+If DRS were artificially inflating overtaking, its removal should produce fewer position
+changes. Instead the opposite is observed: early 2026 races show a higher overtake index
+than the DRS era average.
+
+Two important caveats apply. First, **3 rounds is a very small sample** — the 2026 figure
+is directional only and must be revisited as the season matures. Second, the early 2026
+calendar (Australia, China, Japan) may skew the comparison — these tracks produce different
+overtaking profiles to the full calendar average.
+
+The data currently challenges the narrative, but a full season is needed before drawing
+firm conclusions.

@@ -9,6 +9,59 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.6.0] — 2026-04-06
+
+### Added
+
+- `scripts/export_data.py` — data pipeline layer:
+  - `export(**dataframes)` — validates schema, coerces dtypes, atomic Parquet
+    write (`.tmp` staging → rename), updates `manifest.json`
+  - `read(name)` — reads a single Parquet from `data/computed/`
+  - `manifest_summary()` — prints row counts and export timestamps
+  - SCHEMAS dict covering all 7 exported files
+- `data/computed/` — pre-computed Parquet pipeline directory; `.gitkeep` tracked,
+  `.parquet` files gitignored
+- `scripts/update_all.py` — post-race rebuild orchestrator:
+  - Executes notebooks 02 and 04 headlessly via `jupyter nbconvert`
+  - Runs `quarto render site/`
+  - Stages `site/docs/` and `manifest.json` for commit
+  - Usage: `python scripts/update_all.py --season YYYY --round N`
+- `site/` — Quarto website project:
+  - `_quarto.yml` — website config, darkly theme, navbar, `docs/` output dir
+  - `index.qmd` — landing page reading from `manifest.json`; data coverage table
+  - `narratives/01-dnf-categorisation.qmd` — DNF cause categorisation
+  - `narratives/02-ferrari-trajectory.qmd` — Ferrari championship trajectory
+    (Plotly line chart)
+  - `narratives/03-monaco-overtake.qmd` — Monaco overtake index (Plotly bar)
+  - `narratives/04-safety-car.qmd` — safety car lottery (Plotly subplots)
+  - `narratives/05-drs-active-aero.qmd` — DRS vs active aero (Plotly scatter)
+  - `narratives/06-pit-stop-excitement.qmd` — pit stop excitement (Plotly scatter)
+  - `narratives/07-turn1-chaos.qmd` — Turn 1 chaos (Matplotlib bar)
+- Export cells added to `notebooks/02_2026_era_year1.ipynb` and
+  `notebooks/04_narrative_testing.ipynb`
+- `pyarrow` added to `requirements.txt`
+- First export run: 7 Parquet files, `manifest.json` verified
+
+### Infrastructure
+
+- `.gitignore` updated: `data/computed/*.parquet` and `site/docs/*` gitignored;
+  `.gitkeep` files tracked to preserve directory structure
+- `QUARTO_PYTHON` environment variable set to `C:\Python313\python.exe` to
+  direct Quarto to the correct Python installation on Windows
+
+### Analysis
+
+- All 7 narrative verdicts confirmed on first site render:
+  - DNF categorisation: Inconclusive (data source insufficient)
+  - Ferrari trajectory: Not supported (2 seasons only)
+  - Monaco overtake index: Partially supported
+  - Safety car lottery: Supported
+  - DRS vs active aero: Not supported (3 rounds — directional only)
+  - Pit stop excitement: Partially supported — era-specific
+  - Turn 1 chaos: Supported
+
+---
+
 ## [v0.5.6] — 2026-04-06
 
 ### Added
