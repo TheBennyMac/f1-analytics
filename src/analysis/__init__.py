@@ -82,6 +82,11 @@ from src.analysis.safety_car import (
     sc_lottery_summary,
     intervention_frequency,
 )
+from src.analysis.turn1 import (
+    first_lap_retirements,
+    lap1_position_changes,
+    turn1_summary_by_era_year,
+)
 
 __all__ = [
     "gini_coefficient", "points_gini_by_round", "points_gap_by_round", "season_end_gini",
@@ -103,4 +108,5 @@ __all__ = [
     "overtake_index_by_circuit", "monaco_vs_field", "overtake_index_by_era",
     "sc_counts_per_race", "sc_position_impact",
     "sc_lottery_summary", "intervention_frequency",
+    "first_lap_retirements", "lap1_position_changes", "turn1_summary_by_era_year",
 ]
