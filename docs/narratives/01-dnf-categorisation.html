@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Turn 1 Chaos – F1 Analytics</title>
+<title>DNF Cause Categorisation – F1 Analytics</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,6 +105,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -184,6 +187,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-narrative" id="toc-the-narrative" class="nav-link active" data-scroll-target="#the-narrative">The narrative</a></li>
   <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a></li>
   <li><a href="#findings" id="toc-findings" class="nav-link" data-scroll-target="#findings">Findings</a></li>
+  <li><a href="#limitation-and-next-steps" id="toc-limitation-and-next-steps" class="nav-link" data-scroll-target="#limitation-and-next-steps">Limitation and next steps</a></li>
   </ul>
 </nav>
     </div>
@@ -192,8 +196,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Turn 1 Chaos</h1>
-<p class="subtitle lead">Are regulation reset years more incident-prone on the opening lap?</p>
+<h1 class="title">DNF Cause Categorisation</h1>
+<p class="subtitle lead">Are regulation reset years harder on the cars?</p>
 </div>
 
 
@@ -213,22 +217,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-narrative" class="level2">
 <h2 class="anchored" data-anchor-id="the-narrative">The narrative</h2>
 <blockquote class="blockquote">
-<p><em>“Turn 1 is where races are won and lost — and it’s worse in regulation reset years. Unfamiliar cars, uncertain relative pace, and aggressive positioning combine to produce more first-lap chaos when the regulations change.”</em></p>
+<p><em>“Regulation reset years produce more mechanical failures — teams are running cars that are not yet fully understood, and reliability suffers as a result.”</em></p>
 </blockquote>
-<p>The hypothesis predicts that Year 1 of a new regulation era shows a higher rate of first-lap retirements than settled era years (Year 2+).</p>
+<p>The hypothesis predicts that Year 1 of a new regulation era should show a higher share of mechanical DNFs relative to collision DNFs, with the share declining as teams develop their understanding of the new machinery across subsequent seasons.</p>
 <hr>
 </section>
 <section id="method" class="level2">
 <h2 class="anchored" data-anchor-id="method">Method</h2>
-<p>A first-lap retirement is defined as a driver who:</p>
-<ol type="1">
-<li>Had a valid grid position (started the race)</li>
-<li>Did not finish (DNF status)</li>
-<li>Completed at most 2 laps — capturing lap 1 incidents plus cars that limped to the pits immediately after</li>
-</ol>
-<p>FastF1 assigns finishing positions 1–20 to all drivers including DNFs, so lap count (from lap-by-lap data) is used rather than finish position to identify early retirements.</p>
-<p>Data covers <strong>2022–2025</strong> (92 races, all four years of the Ground Effect Era).</p>
-<div id="234b9a54" class="cell" data-execution_count="1">
+<p>DNF statuses from FastF1 results data (2022–2025) were categorised into three groups:</p>
+<ul>
+<li><strong>Mechanical</strong> — engine, gearbox, hydraulics, suspension failures</li>
+<li><strong>Collision</strong> — accidents, contact, spins</li>
+<li><strong>Unknown</strong> — generic “Retired” with no attributed cause</li>
+</ul>
+<div id="eb5ffada" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -236,60 +238,119 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scripts.export_data <span class="im">as</span> exp</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>retirement_by_era <span class="op">=</span> exp.read(<span class="st">'retirement_by_era'</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(retirement_by_era.to_string(index<span class="op">=</span><span class="va">False</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.ticker <span class="im">as</span> mtick</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.analysis.dnf_categorisation <span class="im">import</span> (</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    categorise_dnf,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    dnf_category_counts,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    mechanical_share_by_era_year,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils.era_helper <span class="im">import</span> get_year_within_era</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scripts.export_data <span class="im">as</span> exp</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>results_df <span class="op">=</span> exp.read(<span class="st">'results_2022_2025'</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>_CLASSIFIED <span class="op">=</span> {<span class="st">'Finished'</span>, <span class="st">'Lapped'</span>}</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _is_dnf(status):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> status <span class="kw">in</span> _CLASSIFIED:</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(status, <span class="bu">str</span>) <span class="kw">and</span> status.startswith(<span class="st">'+'</span>) <span class="kw">and</span> <span class="st">'Lap'</span> <span class="kw">in</span> status:</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>dnf_df <span class="op">=</span> results_df[results_df[<span class="st">'status'</span>].<span class="bu">apply</span>(_is_dnf)].copy()</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>dnf_df[<span class="st">'category'</span>] <span class="op">=</span> dnf_df[<span class="st">'status'</span>].<span class="bu">apply</span>(categorise_dnf)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>dnf_df[<span class="st">'era_year'</span>] <span class="op">=</span> dnf_df[<span class="st">'season'</span>].<span class="bu">apply</span>(get_year_within_era)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>season_counts <span class="op">=</span> dnf_category_counts(dnf_df, group_by<span class="op">=</span>[<span class="st">'season'</span>])</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total DNFs across 2022–2025: </span><span class="sc">{</span><span class="bu">len</span>(dnf_df)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>season_counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code> era_year  races  mean_starters  total_first_lap_dnfs  mean_dnf_rate
-        1     22           19.5                     9          0.021
-        2     22           19.9                     4          0.009
-        3     24           19.9                     3          0.006
-        4     24           20.0                     3          0.006</code></pre>
+<pre><code>Total DNFs across 2022–2025: 254</code></pre>
 </div>
-</div>
-<div id="de621079" class="cell" data-execution_count="2">
-<details class="code-fold">
-<summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fig.patch.set_facecolor(<span class="st">'#222222'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax.set_facecolor(<span class="st">'#222222'</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>colours <span class="op">=</span> [<span class="st">'#E8002D'</span>, <span class="st">'#FF9800'</span>, <span class="st">'#4CAF50'</span>, <span class="st">'#4CAF50'</span>]</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.bar(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    retirement_by_era[<span class="st">'era_year'</span>].astype(<span class="bu">str</span>).<span class="bu">map</span>(<span class="kw">lambda</span> y: <span class="ss">f'Year </span><span class="sc">{</span>y<span class="sc">}</span><span class="ss">'</span>),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    retirement_by_era[<span class="st">'mean_dnf_rate'</span>] <span class="op">*</span> <span class="dv">100</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>colours,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    edgecolor<span class="op">=</span><span class="st">'none'</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> bar, row <span class="kw">in</span> <span class="bu">zip</span>(bars, retirement_by_era.itertuples()):</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    ax.text(</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        bar.get_x() <span class="op">+</span> bar.get_width() <span class="op">/</span> <span class="dv">2</span>,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        bar.get_height() <span class="op">+</span> <span class="fl">0.05</span>,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f'</span><span class="sc">{</span>row<span class="sc">.</span>mean_dnf_rate <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%</span><span class="ch">\n</span><span class="ss">(</span><span class="sc">{</span>row<span class="sc">.</span>total_first_lap_dnfs<span class="sc">}</span><span class="ss"> DNFs, </span><span class="sc">{</span>row<span class="sc">.</span>races<span class="sc">}</span><span class="ss"> races)'</span>,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'bottom'</span>, color<span class="op">=</span><span class="st">'white'</span>, fontsize<span class="op">=</span><span class="dv">9</span>,</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Year within era'</span>, color<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Mean first-lap DNF rate (%)'</span>, color<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'First-Lap DNF Rate by Era Year — Ground Effect Era (2022–2025)'</span>, color<span class="op">=</span><span class="st">'white'</span>, pad<span class="op">=</span><span class="dv">16</span>)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>ax.tick_params(colors<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>ax.spines[:].set_visible(<span class="va">False</span>)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>ax.yaxis.set_major_formatter(plt.FuncFormatter(<span class="kw">lambda</span> x, _: <span class="ss">f'</span><span class="sc">{</span>x<span class="sc">:.1f}</span><span class="ss">%'</span>))</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Extra headroom so bar labels don't clip into the title</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">0</span>, retirement_by_era[<span class="st">'mean_dnf_rate'</span>].<span class="bu">max</span>() <span class="op">*</span> <span class="dv">100</span> <span class="op">*</span> <span class="fl">1.35</span>)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="07-turn1-chaos_files/figure-html/cell-3-output-1.png" width="758" height="374" class="figure-img"></p>
-<figcaption>Mean first-lap DNF rate by year within the Ground Effect Era (2022–2025). Year 1 = 2022, Year 4 = 2025.</figcaption>
-</figure>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2022</td>
+<td>Mechanical</td>
+<td>41</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2022</td>
+<td>Collision</td>
+<td>32</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2022</td>
+<td>Administrative</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2023</td>
+<td>Unknown</td>
+<td>53</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2023</td>
+<td>Administrative</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>2023</td>
+<td>Collision</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>2023</td>
+<td>Mechanical</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>2024</td>
+<td>Unknown</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>2024</td>
+<td>Administrative</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>2025</td>
+<td>Unknown</td>
+<td>51</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>2025</td>
+<td>Administrative</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
 </div>
@@ -310,27 +371,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td>Is the first-lap DNF rate higher in Year 1?</td>
-<td><strong>Yes</strong> — Year 1 (2022) recorded a 2.1% mean rate, more than double any subsequent year</td>
+<td>Does Year 1 show higher mechanical share?</td>
+<td>Directionally yes — but most retirements lack a descriptive cause</td>
 </tr>
 <tr class="even">
-<td>How does Year 1 compare to Years 2–4?</td>
-<td>~3.5× higher: 2022 = 2.1%, 2023 = 0.9%, 2024 = 0.6%, 2025 = 0.6%</td>
+<td>Is there a clear downward trend across era years?</td>
+<td>Apparent, but masked by data quality</td>
 </tr>
 <tr class="odd">
-<td>Is there a convergence trend?</td>
-<td><strong>Yes</strong> — the rate falls monotonically and stabilises by Year 3</td>
+<td>Which season had the most collision DNFs?</td>
+<td>Inconclusive — dataset insufficient from 2024 onward</td>
 </tr>
 <tr class="even">
-<td>Does lap 1 position change activity support the hypothesis?</td>
-<td>GridPosition not present in the FastF1 laps dataset — metric could not be computed</td>
+<td>What share of DNFs are “Unknown” (Retired, no cause)?</td>
+<td>The vast majority — rendering year-on-year comparison unreliable</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Verdict: Supported.</strong></p>
-<p>First-lap retirements are clearly elevated in the regulation reset year. Year 1 (2022) produced a mean first-lap DNF rate of 2.1% — roughly 3.5 times the rate of Years 2–4 (0.6–0.9%). The rate falls monotonically across the era and stabilises by Year 3, consistent with teams and drivers learning the limits of the new machinery.</p>
-<p>The DNS data shows an interesting counter-pattern: Year 1 had the <em>fewest</em> drivers failing to start, suggesting teams prioritised getting cars to the grid in the reset year even at some reliability cost. By Year 2, more conservative decisions about race entry appear in the data.</p>
-<p><strong>Implication for 2026:</strong> If the pattern holds, the first-lap incident rate in 2026 should be elevated relative to the settled Ground Effect Era years — and should decline by 2027–2028 as teams converge on safer setups. This will be tracked as 2026 data matures.</p>
+<p><strong>Verdict: Inconclusive — data source insufficient.</strong></p>
+<p>FastF1 status strings degrade significantly from 2023 onward. In 2024 and 2025, virtually all retirements record as a generic “Retired” with no attributed cause. The 2022 data is credible (52% Mechanical / 48% Collision), but a year-on-year trend cannot be established from this source alone.</p>
+<hr>
+</section>
+<section id="limitation-and-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="limitation-and-next-steps">Limitation and next steps</h2>
+<p>The analysis infrastructure (<code>src/analysis/dnf_categorisation.py</code>) is built and correct — the data source is the constraint. To test this narrative properly would require a manually curated source such as motorsport-reference.com race reports that retain cause-of-retirement detail for every season.</p>
+<p>This narrative is retained on the site for transparency about what was attempted, but <strong>no chart is shown</strong> as the data does not support a reliable visualisation.</p>
 
 
 </section>

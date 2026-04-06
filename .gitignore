@@ -23,8 +23,8 @@ data/computed/*.parquet
 data/computed/*.parquet.tmp
 
 # Quarto render output — committed only on deploy via scripts/update_all.py
-site/docs/*
-!site/docs/.gitkeep
+docs/*
+!docs/.gitkeep
 
 # Environment / secrets
 .env
