@@ -1,0 +1,120 @@
+{
+  "exports": {
+    "results_2022_2025": {
+      "rows": 1838,
+      "columns": [
+        "season",
+        "round",
+        "race_name",
+        "is_sprint_weekend",
+        "driver_id",
+        "driver_name",
+        "constructor_id",
+        "constructor_name",
+        "grid_position",
+        "finish_position",
+        "points",
+        "status",
+        "had_sc",
+        "had_vsc",
+        "had_red_flag",
+        "sc_count",
+        "vsc_count",
+        "red_flag_count"
+      ],
+      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+    },
+    "championship_trajectory": {
+      "rows": 920,
+      "columns": [
+        "season",
+        "round",
+        "constructor_id",
+        "constructor_name",
+        "round_points",
+        "cumulative_points",
+        "leader_points",
+        "gap_to_leader"
+      ],
+      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+    },
+    "overtake_index_by_race": {
+      "rows": 92,
+      "columns": [
+        "season",
+        "round",
+        "race_name",
+        "finishers",
+        "positions_gained",
+        "mean_abs_delta",
+        "starters",
+        "overtake_index"
+      ],
+      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+    },
+    "sc_summary_by_race": {
+      "rows": 92,
+      "columns": [
+        "season",
+        "round",
+        "race_name",
+        "sc_count",
+        "vsc_count",
+        "red_flag_count",
+        "any_intervention",
+        "overtake_index",
+        "positions_gained",
+        "finishers"
+      ],
+      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+    },
+    "pit_excitement_by_race": {
+      "rows": 21,
+      "columns": [
+        "season",
+        "round",
+        "split_lap",
+        "pre_positions_gained_per_lap",
+        "post_positions_gained_per_lap",
+        "pre_laps",
+        "post_laps",
+        "era"
+      ],
+      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+    },
+    "retirement_by_era": {
+      "rows": 4,
+      "columns": [
+        "era_year",
+        "races",
+        "mean_starters",
+        "total_first_lap_dnfs",
+        "mean_dnf_rate"
+      ],
+      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+    },
+    "results_2026": {
+      "rows": 66,
+      "columns": [
+        "season",
+        "round",
+        "race_name",
+        "is_sprint_weekend",
+        "driver_id",
+        "driver_name",
+        "constructor_id",
+        "constructor_name",
+        "grid_position",
+        "finish_position",
+        "points",
+        "status",
+        "had_sc",
+        "had_vsc",
+        "had_red_flag"
+      ],
+      "exported_at": "2026-04-06T10:08:42.802206+00:00"
+    }
+  },
+  "fastf1_version": "3.8.2",
+  "last_updated": "2026-04-06T10:08:42.802206+00:00"
+}

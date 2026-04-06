@@ -6,6 +6,7 @@ python-dotenv
 # Data processing
 pandas
 numpy
+pyarrow
 
 # Notebook & visualisation
 jupyterlab

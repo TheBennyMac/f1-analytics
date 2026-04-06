@@ -1,0 +1,113 @@
+---
+title: "Monaco Overtake Index"
+subtitle: "Is Monaco uniquely processional, or just one of several qualifying spectacles?"
+---
+
+## The narrative
+
+> *"Monaco produces processional races — it is uniquely unsuited to overtaking and should
+> be dropped from the calendar."*
+
+The hypothesis predicts Monaco would rank as the lowest-overtaking circuit on the calendar
+by a clear margin.
+
+---
+
+## Method
+
+**Overtake index** = total positions gained by classified finishers ÷ starters per race.
+This normalises for field size and attrition. DNFs and pit-lane starters (grid position = 0)
+are excluded — their position changes do not reflect on-track overtaking.
+
+Data covers **2022–2025** (92 races, 22 circuits).
+
+```{python}
+import sys
+sys.path.insert(0, '../..')
+
+import pandas as pd
+import plotly.graph_objects as go
+import scripts.export_data as exp
+from src.analysis.overtake_index import (
+    overtake_index_per_race,
+    overtake_index_by_circuit,
+    monaco_vs_field,
+)
+
+results_df = exp.read('results_2022_2025')
+race_oi = overtake_index_per_race(results_df)
+circuit_oi = overtake_index_by_circuit(race_oi)
+ranked = monaco_vs_field(circuit_oi)
+
+print(f"{len(circuit_oi)} circuits · {len(race_oi)} races · 2022–2025")
+```
+
+```{python}
+#| fig-cap: "Mean overtake index by circuit, 2022–2025. Higher = more position changes per race. Monaco and Japan highlighted."
+
+colours = []
+for _, row in ranked.iterrows():
+    if row['is_target']:
+        colours.append('#E8002D')   # Monaco — red
+    elif 'Japan' in row['race_name']:
+        colours.append('#FF9800')   # Japan — amber
+    else:
+        colours.append('#636EFA')   # Field — blue
+
+fig = go.Figure(go.Bar(
+    x=ranked['mean_overtake_index'],
+    y=ranked['race_name'],
+    orientation='h',
+    marker_color=colours,
+    customdata=ranked[['races', 'mean_positions_gained']].values,
+    hovertemplate=(
+        '<b>%{y}</b><br>'
+        'Mean overtake index: %{x:.3f}<br>'
+        'Races in sample: %{customdata[0]}<br>'
+        'Mean positions gained: %{customdata[1]:.1f}<extra></extra>'
+    ),
+))
+
+field_mean = ranked['mean_overtake_index'].mean()
+fig.add_vline(
+    x=field_mean,
+    line_dash='dash',
+    line_color='white',
+    opacity=0.5,
+    annotation_text=f'Field mean {field_mean:.3f}',
+    annotation_position='top right',
+)
+
+fig.update_layout(
+    title='Mean Overtake Index by Circuit — 2022–2025',
+    xaxis_title='Mean overtake index (positions gained / starters)',
+    yaxis_title=None,
+    template='plotly_dark',
+    height=700,
+    margin=dict(l=200),
+)
+fig.show()
+```
+
+---
+
+## Findings
+
+| Question | Finding |
+|---|---|
+| Where does Monaco rank among all circuits? | 2nd lowest — behind Japan |
+| How does Monaco compare to the field mean? | Considerably lower |
+| Are there circuits similarly processional to Monaco? | Japan is the only comparable one |
+| Is the narrative supported? | Partially |
+
+**Verdict: Partially supported.**
+
+Monaco is genuinely one of the least overtaking circuits on the calendar — but it is not
+uniquely so. The Japanese Grand Prix ranks below Monaco on mean overtake index and yet
+attracts little of the same criticism. Both circuits are **qualifying spectacles**: because
+grid position is structurally decisive on street and high-downforce tracks, the races reward
+Saturday performance rather than Sunday wheel-to-wheel racing.
+
+The narrative holds in the sense that Monaco produces fewer overtakes than a typical round —
+but the "uniquely processional" framing does not survive scrutiny. Japan is a parallel case
+that the received wisdom tends to ignore.

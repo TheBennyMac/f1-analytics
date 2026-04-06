@@ -1,0 +1,83 @@
+---
+title: "F1 Analytics"
+subtitle: "Objective insights from F1 race data — era transitions, parity, and narrative testing."
+---
+
+```{python}
+#| echo: false
+import json
+from pathlib import Path
+
+manifest_path = Path("../data/computed/manifest.json")
+manifest = json.loads(manifest_path.read_text())
+
+last_updated = manifest.get("last_updated", "unknown")[:10]
+ff1_version = manifest.get("fastf1_version", "unknown")
+exports = manifest.get("exports", {})
+
+results_2022 = exports.get("results_2022_2025", {})
+results_2026 = exports.get("results_2026", {})
+```
+
+## About this project
+
+This site presents data-driven analysis of Formula 1 racing across the 2022–2026 regulation eras.
+The primary focus is the **Ground Effect Era (2022–2025)** and how the **2026 Era** compares at the
+equivalent stage — same metrics, same lens, one regulation cycle apart.
+
+Each narrative page tests a widely-held piece of received F1 wisdom against the numbers, reports
+what the data actually shows, and is honest about where the sample is too small to draw conclusions.
+
+---
+
+## Data coverage
+
+```{python}
+#| echo: false
+import pandas as pd
+
+rows = []
+for name, meta in sorted(exports.items()):
+    rows.append({
+        "Dataset": name.replace("_", " ").title(),
+        "Rows": f"{meta['rows']:,}",
+        "Last exported": meta["exported_at"][:10],
+    })
+
+pd.DataFrame(rows).style.hide(axis="index")
+```
+
+**Source:** FastF1 v`{python} ff1_version` · OpenF1 REST API
+**Last updated:** `{python} last_updated`
+**2026 rounds completed:** Australia (R1), China (R2), Japan (R3) — next: Miami GP (~May 2026)
+
+> Bahrain and Saudi Arabia (April 2026) cancelled due to regional conflict.
+
+---
+
+## Narratives
+
+Seven hypotheses tested against the data. Each page states the received wisdom, defines the
+metric, shows the chart, and delivers a verdict.
+
+| # | Narrative | Verdict |
+|---|---|---|
+| 1 | [DNF Cause Categorisation](narratives/01-dnf-categorisation.qmd) | Inconclusive — data insufficient |
+| 2 | [Ferrari Always Bottles It](narratives/02-ferrari-trajectory.qmd) | Not supported (2 seasons only) |
+| 3 | [Monaco Produces Processional Races](narratives/03-monaco-overtake.qmd) | Partially supported |
+| 4 | [Safety Car Lottery](narratives/04-safety-car.qmd) | Supported |
+| 5 | [DRS Made Overtaking Artificial](narratives/05-drs-active-aero.qmd) | Not supported (3 rounds only) |
+| 6 | [Races Are More Exciting Before the Pit Stop](narratives/06-pit-stop-excitement.qmd) | Partially supported — era-specific |
+| 7 | [Turn 1 Chaos in Regulation Reset Years](narratives/07-turn1-chaos.qmd) | Supported |
+
+---
+
+## Era reference
+
+| Era | Years | Key change |
+|---|---|---|
+| Ground Effect Era | 2022–2025 | Cost cap, ground effect aero, 18" tyres |
+| 2026 Era | 2026– | New PU regs, active aero, current season |
+
+Analysis of convergence tracks gap metrics by **year within era** (Year 1, Year 2…) rather than
+calendar year, so 2022 and 2026 are directly comparable as regulation reset years.

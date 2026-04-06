@@ -1,0 +1,43 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "F1 Analytics"
+  description: "Objective insights from F1 race data — era transitions, parity, and narrative testing."
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - text: Narratives
+        menu:
+          - href: narratives/01-dnf-categorisation.qmd
+            text: "1. DNF Cause Categorisation"
+          - href: narratives/02-ferrari-trajectory.qmd
+            text: "2. Ferrari Championship Trajectory"
+          - href: narratives/03-monaco-overtake.qmd
+            text: "3. Monaco Overtake Index"
+          - href: narratives/04-safety-car.qmd
+            text: "4. Safety Car Lottery"
+          - href: narratives/05-drs-active-aero.qmd
+            text: "5. DRS vs Active Aero"
+          - href: narratives/06-pit-stop-excitement.qmd
+            text: "6. Pit Stop Excitement"
+          - href: narratives/07-turn1-chaos.qmd
+            text: "7. Turn 1 Chaos"
+  page-footer:
+    center: "F1 Analytics — data from FastF1 and OpenF1. Non-commercial analysis."
+
+format:
+  html:
+    theme: darkly
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    code-summary: "Show code"
+
+execute:
+  freeze: false
+  echo: true
+  warning: false
+  message: false

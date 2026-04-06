@@ -18,6 +18,14 @@ env/
 data/cache/*
 !data/cache/.gitkeep
 
+# Computed Parquet files — regenerated after each race; manifest.json is committed
+data/computed/*.parquet
+data/computed/*.parquet.tmp
+
+# Quarto render output — committed only on deploy via scripts/update_all.py
+site/docs/*
+!site/docs/.gitkeep
+
 # Environment / secrets
 .env
 *.env.local

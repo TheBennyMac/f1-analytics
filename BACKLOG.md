@@ -172,35 +172,38 @@ Architecture decisions finalised 2026-04-06. All decisions below are fixed const
 
 ### Prerequisites (must be done before any site work)
 - [x] Pin `fastf1==3.8.2` in `requirements.txt`
-- [ ] Write `scripts/export_data.py` with atomic writes and schema validation
-- [ ] Add export cells to `notebooks/04` and `notebooks/02`
-- [ ] Run first export — verify `manifest.json` created correctly
+- [x] Write `scripts/export_data.py` with atomic writes and schema validation
+- [x] Add export cells to `notebooks/04` and `notebooks/02`
+- [x] Run first export — verify `manifest.json` created correctly
 
-### Week 1 — Foundation
-- [ ] Create `data/computed/`, `scripts/`, `site/` directory structure
-- [ ] Write `scripts/export_data.py` (atomic staging → promote, schema validation, manifest update)
-- [ ] Add export cells to `notebooks/04_narrative_testing.ipynb` and `notebooks/02_2026_era_year1.ipynb`
-- [ ] Run first export; verify `manifest.json` contents
-- [ ] Install Quarto (`winget install --id Posit.Quarto`)
-- [ ] Create `site/_quarto.yml` (website type, `docs/` output, navbar)
+### Week 1 — Foundation ✅ Complete 2026-04-06
 
-### Week 2 — Site Build
-- [ ] Build `site/index.qmd` — landing page reading last_updated and data coverage from `manifest.json`
-- [ ] Build 7 `.qmd` narrative pages (one per notebook section), each reading from `data/computed/`
-- [ ] Convert 5 charts from Matplotlib to Plotly:
+- [x] Create `data/computed/`, `scripts/`, `site/` directory structure
+- [x] Write `scripts/export_data.py` (atomic staging → promote, schema validation, manifest update)
+- [x] Add export cells to `notebooks/04_narrative_testing.ipynb` and `notebooks/02_2026_era_year1.ipynb`
+- [x] Run first export; verify `manifest.json` contents
+- [x] Install Quarto (`winget install --id Posit.Quarto`)
+- [x] Create `site/_quarto.yml` (website type, `docs/` output, navbar)
+
+### Week 2 — Site Build ✅ Complete 2026-04-06
+
+- [x] Build `site/index.qmd` — landing page reading last_updated and data coverage from `manifest.json`
+- [x] Build 7 `.qmd` narrative pages (one per notebook section), each reading from `data/computed/`
+- [x] Convert 5 charts from Matplotlib to Plotly:
   - Ferrari trajectory — gap line chart by round
   - Monaco — horizontal bar, all circuits
   - Safety car — scatter: OI vs SC count per race
   - DRS — scatter: OI per race coloured by era
   - Pit excitement — scatter: pre vs post positions gained per race
 
-### Week 3 — Workflow and Deploy
-- [ ] Write `scripts/update_all.py` (execute notebooks → validate exports → render → commit)
-- [ ] Test full rebuild cycle end-to-end on a clean run
+### Week 3 — Workflow and Deploy ✅ Complete 2026-04-06
+
+- [x] Write `scripts/update_all.py` (execute notebooks → validate exports → render → commit)
+- [x] Test full rebuild cycle end-to-end on a clean run
 - [ ] Review git history and notebook outputs before making repo public
 - [ ] Enable GitHub Pages on `main` branch, source: `site/docs/`
 - [ ] Verify live site at GitHub Pages URL
-- [ ] Update BACKLOG and CHANGELOG for v0.6.0
+- [x] Update BACKLOG and CHANGELOG for v0.6.0
 
 ### Data exports required (consumed by `.qmd` pages)
 | File | Source | Stable? |

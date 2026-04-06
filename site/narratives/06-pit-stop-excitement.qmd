@@ -1,0 +1,136 @@
+---
+title: "Pit Stop Excitement"
+subtitle: "Are races more competitive before the pit window closes?"
+---
+
+## The narrative
+
+> *"Races are more exciting before the pit stop — the first half of a Grand Prix, with
+> cars on original tyres and natural degradation, produces closer racing than the
+> post-stop phase, where fresh tyres spread the field."*
+
+The hypothesis predicts the pre-pit-stop phase shows more position change activity
+per lap than the post-stop phase.
+
+---
+
+## Method
+
+For each full-length Grand Prix (sprint weekends excluded), the median first pit lap
+across all drivers is used as the phase boundary. Position changes per lap are computed
+separately for the pre- and post-stop phases.
+
+Seasons analysed: **2022** (17 non-sprint races) and **2026** (2 non-sprint races:
+Australia and Japan — China was a sprint weekend).
+
+```{python}
+import sys
+sys.path.insert(0, '../..')
+
+import pandas as pd
+import plotly.graph_objects as go
+import scripts.export_data as exp
+
+excitement = exp.read('pit_excitement_by_race')
+
+era_summary = excitement.groupby('era').agg(
+    races=('pre_positions_gained_per_lap', 'count'),
+    mean_pre=('pre_positions_gained_per_lap', 'mean'),
+    mean_post=('post_positions_gained_per_lap', 'mean'),
+).reset_index().round(3)
+
+print(era_summary.to_string(index=False))
+```
+
+```{python}
+#| fig-cap: "Pre vs post pit stop position change activity per race. Each point is one race. Hover for circuit detail."
+
+results_df = exp.read('results_2022_2025')
+results_2026 = exp.read('results_2026')
+race_names_2022 = (
+    results_df[['season', 'round', 'race_name']]
+    .drop_duplicates()
+)
+race_names_2026 = (
+    results_2026[['season', 'round', 'race_name']]
+    .drop_duplicates()
+)
+race_names = pd.concat([race_names_2022, race_names_2026])
+
+plot_df = excitement.merge(race_names, on=['season', 'round'], how='left')
+
+ERA_COLOURS = {'Ground Effect Era (2022)': '#636EFA', '2026 Era': '#FF6B35'}
+
+fig = go.Figure()
+
+for era, colour in ERA_COLOURS.items():
+    sub = plot_df[plot_df['era'] == era]
+    fig.add_trace(go.Scatter(
+        x=sub['pre_positions_gained_per_lap'],
+        y=sub['post_positions_gained_per_lap'],
+        mode='markers',
+        name=era,
+        marker=dict(color=colour, size=10, opacity=0.85),
+        customdata=sub[['race_name', 'season', 'round', 'split_lap']].values,
+        hovertemplate=(
+            '<b>%{customdata[0]}</b><br>'
+            '%{customdata[1]} R%{customdata[2]}<br>'
+            'Split lap: %{customdata[3]:.0f}<br>'
+            'Pre-stop: %{x:.3f} pos/lap<br>'
+            'Post-stop: %{y:.3f} pos/lap<extra></extra>'
+        ),
+    ))
+
+# Diagonal parity line (pre = post)
+max_val = max(
+    plot_df['pre_positions_gained_per_lap'].max(),
+    plot_df['post_positions_gained_per_lap'].max(),
+) * 1.05
+fig.add_shape(
+    type='line', x0=0, y0=0, x1=max_val, y1=max_val,
+    line=dict(color='white', dash='dash', width=1),
+)
+fig.add_annotation(
+    x=max_val * 0.7, y=max_val * 0.7,
+    text='pre = post', showarrow=False,
+    font=dict(color='white', size=10), opacity=0.5,
+    textangle=-45,
+)
+
+fig.update_layout(
+    title='Pre vs Post Pit Stop Position Changes per Lap',
+    xaxis_title='Pre-stop: positions gained per lap',
+    yaxis_title='Post-stop: positions gained per lap',
+    template='plotly_dark',
+    height=480,
+    legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+)
+fig.show()
+```
+
+---
+
+## Findings
+
+| Question | Finding |
+|---|---|
+| Mean positions gained per lap — pre pit stop (2022)? | 2.592 across 17 races |
+| Mean positions gained per lap — post pit stop (2022)? | 2.556 — virtually identical |
+| Mean positions gained per lap — pre pit stop (2026)? | 4.052 across 2 races |
+| Mean positions gained per lap — post pit stop (2026)? | 1.144 — a dramatic drop |
+| Is pre-stop racing more active than post-stop? | In 2026 yes; in 2022 negligibly |
+| Is the pattern consistent across both eras? | No — era-specific |
+
+**Verdict: Partially supported — but era-specific.**
+
+In 2022 the pre/post split is negligible (2.592 vs 2.556 positions per lap) — the narrative
+does not hold for the Ground Effect Era. Racing was equally competitive in both phases.
+
+In 2026 the effect is dramatic: pre-stop racing produces **3.5× more position changes per
+lap** than the post-stop phase (4.052 vs 1.144). Points above the diagonal line on the
+chart would suggest post-stop is more active — instead all 2026 races fall well below it.
+
+This may reflect 2026 tyre characteristics — the Hard compound appears to produce very
+processional post-stop racing. However, **only 2 non-sprint 2026 races are in the sample**
+(Australia and Japan). This finding is directional only and must be revisited as Miami and
+subsequent rounds are added.
