@@ -133,6 +133,18 @@ SCHEMAS: dict[str, dict[str, str]] = {
         "gini": "float64",
         "n_constructors": "int64",
     },
+    "ferrari_lead_conversion": {
+        "season": "int64",
+        "constructor_id": "object",
+        "constructor_name": "object",
+        "era_name": "object",
+        "year_in_era": "int64",
+        "first_led_round": "int64",
+        "max_lead_points": "float64",
+        "led_at_midseason": "bool",
+        "won_title": "bool",
+        "final_position": "int64",
+    },
 }
 
 
