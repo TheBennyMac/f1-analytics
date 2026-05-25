@@ -1,6 +1,6 @@
 # BACKLOG.md - F1 Analytics
 
-## Current Version: v0.5.6 (Narrative Testing: Turn 1 Chaos — v0.5.0 milestone complete)
+## Current Version: v0.7.0 (Historical Era Analysis — Jolpica integration, three-era convergence, Ferrari lead conversion)
 
 ### Scope Decision (2026-03-31)
 

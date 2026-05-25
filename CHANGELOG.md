@@ -9,6 +9,49 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [v0.7.0] — 2026-05-25
+
+### Added
+
+- `src/data/jolpica_client.py` — Jolpica F1 API client (Ergast community mirror;
+  Ergast went offline Nov 2024). Fetches constructor standings and race results
+  for pre-2022 seasons. File-based cache at `data/cache/jolpica/`.
+- `src/analysis/era_convergence.py` — constructor points gap (P1–P10) and Gini
+  coefficient by round, with era labelling via `era_helper`
+- `src/analysis/championship_lead_conversion.py` — mid-season championship lead
+  identification and title conversion rate per constructor
+- `tests/test_jolpica_client.py` — 5 tests (mocked HTTP)
+- `tests/test_era_convergence.py` — 10 tests
+- `tests/test_championship_lead_conversion.py` — 8 tests
+- `notebooks/05_three_era_convergence.ipynb` — fetches 2014 via Jolpica, combines
+  with 2022 and live 2026, exports `era_convergence_by_round.parquet`
+- `notebooks/06_ferrari_full_narrative.ipynb` — fetches 2014–2021 via Jolpica,
+  exports `ferrari_lead_conversion.parquet`
+- `site/narratives/08-era-convergence.qmd` — Narrative 8: three-era convergence
+  chart (P1–P10 gap and Gini by round for 2014, 2022, 2026)
+- `site/narratives/02-ferrari-trajectory.qmd` updated — new historical section
+  with mid-season lead conversion chart and verdict across 12 seasons
+
+### Fixed
+
+- `scripts/update_all.py` — nbconvert invocation corrected to `python -m nbconvert`
+  (was `python -m jupyter nbconvert`); Quarto render now passes `site/` explicitly
+- Sprint weekend Grand Prix races excluded from pit window analysis — removed
+  `_SPRINT_FORMATS` filter; Miami (R4) and Canada (R5) 2026 now included
+- `requests_cache` tracebacks suppressed in notebook 04 outputs
+
+### Analysis
+
+- **Narrative 8 — Three-Era Convergence:** both completed eras (2014 Hybrid, 2022
+  Ground Effect) show monotonically widening P1–P10 gaps across Year 1. 2026 is
+  tracking at R5; directional only. Verdict: partially supported.
+- **Narrative 2 — Ferrari "Bottles It" (full verdict):** Ferrari led the constructor
+  championship at mid-season in 3 seasons (2017, 2018, 2022) and converted none to
+  a title — 0% conversion rate. Mercedes: 8/8 (100%). Red Bull: 2/4 (50%).
+  Verdict: **supported** across 12 seasons of data.
+
+---
+
 ## [v0.6.0] — 2026-04-06
 
 ### Added
