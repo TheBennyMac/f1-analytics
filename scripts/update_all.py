@@ -67,7 +67,7 @@ def _execute_notebook(notebook_path: Path) -> None:
     """Execute a notebook in-place via nbconvert, overwriting outputs."""
     _run(
         [
-            PYTHON, "-m", "jupyter", "nbconvert",
+            PYTHON, "-m", "nbconvert",
             "--to", "notebook",
             "--execute",
             "--inplace",
@@ -85,7 +85,7 @@ def _quarto_render() -> None:
         print("\n[ERROR] quarto not found on PATH.")
         print("  Add C:\\Program Files\\Quarto\\bin to PATH and retry.")
         sys.exit(1)
-    _run([quarto, "render"], label="quarto render site/")
+    _run([quarto, "render", str(SITE_DIR)], label="quarto render site/")
 
 
 def _stage_for_commit(season: int, round_: int) -> None:

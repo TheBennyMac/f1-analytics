@@ -149,6 +149,24 @@
 
 ## Could Have (v0.7.0 — Historical Era Analysis)
 
+**Shared dependency:** both items below require a pre-2022 data source.
+FastF1 covers 2018+, so 2018–2021 (Hybrid era tail) is already accessible;
+only 2014–2017 needs a separate source. Ergast is in maintenance mode but
+reaches back to 1950 — revisit as the primary candidate.
+
+- [ ] Three-era convergence comparison: Hybrid PU (2014–2021) vs Ground
+  Effect (2022–2025) vs 2026 Era
+  - Core question: do convergence patterns repeat across regulation resets?
+    Does it reliably take 2–3 years for the field to compress?
+  - Apply the same metrics already built for the 2022 and 2026 analyses:
+    points spread (Gini + raw gap), P1–P10 lap time delta, DNF rate,
+    overtake index — all expressed as Year N of era, not calendar year
+  - 2018–2021 data available via FastF1; 2014–2017 requires a pre-2022
+    data source (Ergast or equivalent — same blocker as Ferrari item below)
+  - If 2014–2017 data is unavailable, scope to 2018–2021 tail-of-era as
+    a partial comparison: Year 5–8 of Hybrid era vs Year 1–4 of Ground Effect
+  - New notebook: `notebooks/05_three_era_convergence.ipynb`
+
 - [ ] "Ferrari always bottles it" — championship lead conversion rate
   - Requires historical data beyond 2022 (2012, 2017, 2018 are key seasons)
   - Revisit once a pre-2022 data source is integrated (Ergast or equivalent)

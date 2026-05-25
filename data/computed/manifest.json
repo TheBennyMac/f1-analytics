@@ -22,7 +22,7 @@
         "vsc_count",
         "red_flag_count"
       ],
-      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+      "exported_at": "2026-05-25T02:04:57.644205+00:00"
     },
     "championship_trajectory": {
       "rows": 920,
@@ -36,7 +36,7 @@
         "leader_points",
         "gap_to_leader"
       ],
-      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+      "exported_at": "2026-05-25T02:04:57.644205+00:00"
     },
     "overtake_index_by_race": {
       "rows": 92,
@@ -50,7 +50,7 @@
         "starters",
         "overtake_index"
       ],
-      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+      "exported_at": "2026-05-25T02:04:57.644205+00:00"
     },
     "sc_summary_by_race": {
       "rows": 92,
@@ -66,7 +66,7 @@
         "positions_gained",
         "finishers"
       ],
-      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+      "exported_at": "2026-05-25T02:04:57.644205+00:00"
     },
     "pit_excitement_by_race": {
       "rows": 21,
@@ -80,7 +80,7 @@
         "post_laps",
         "era"
       ],
-      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+      "exported_at": "2026-05-25T02:04:57.644205+00:00"
     },
     "retirement_by_era": {
       "rows": 4,
@@ -91,10 +91,10 @@
         "total_first_lap_dnfs",
         "mean_dnf_rate"
       ],
-      "exported_at": "2026-04-06T10:07:30.622421+00:00"
+      "exported_at": "2026-05-25T02:04:57.644205+00:00"
     },
     "results_2026": {
-      "rows": 66,
+      "rows": 110,
       "columns": [
         "season",
         "round",
@@ -112,9 +112,9 @@
         "had_vsc",
         "had_red_flag"
       ],
-      "exported_at": "2026-04-06T10:08:42.802206+00:00"
+      "exported_at": "2026-05-25T01:49:12.064269+00:00"
     }
   },
   "fastf1_version": "3.8.2",
-  "last_updated": "2026-04-06T10:08:42.802206+00:00"
+  "last_updated": "2026-05-25T02:04:57.644205+00:00"
 }

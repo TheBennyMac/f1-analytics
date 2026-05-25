@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if echo \"$CLAUDE_TOOL_INPUT\" | grep -q \"git commit\"; then cd \"c:/Users/Benny Mac/f1-analytics\" && python -m pytest tests/ -q --tb=short 2>&1 | tail -20; fi'"
+            "command": "bash -c 'if echo \"$CLAUDE_TOOL_INPUT\" | grep -q \"git commit\"; then python -m pytest tests/ -q --tb=short 2>&1 | tail -20; fi'"
           }
         ]
       }
