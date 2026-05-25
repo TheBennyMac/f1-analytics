@@ -25,6 +25,8 @@ website:
             text: "6. Pit Stop Excitement"
           - href: narratives/07-turn1-chaos.qmd
             text: "7. Turn 1 Chaos"
+          - href: narratives/08-era-convergence.qmd
+            text: "8. Three-Era Convergence"
   page-footer:
     center: "F1 Analytics — data from FastF1 and OpenF1. Non-commercial analysis."
 

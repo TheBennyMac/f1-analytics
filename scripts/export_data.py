@@ -121,6 +121,18 @@ SCHEMAS: dict[str, dict[str, str]] = {
         "leader_points": "float64",
         "gap_to_leader": "float64",
     },
+    "era_convergence_by_round": {
+        "season": "int64",
+        "round": "int64",
+        "era_name": "object",
+        "year_in_era": "int64",
+        "p1_points": "float64",
+        "pn_points": "float64",
+        "gap_p1_pn": "float64",
+        "gap_normalised": "float64",
+        "gini": "float64",
+        "n_constructors": "int64",
+    },
 }
 
 

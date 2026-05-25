@@ -46,7 +46,7 @@ Use these boundaries for era-based grouping:
 
 - **FastF1** (primary): Python library for session data from ~2018 onward. Lap times, telemetry, tyre compounds, weather, sector times, pit stops. Requires local cache.
 - **OpenF1** (secondary REST): Actively maintained open API covering 2023–present. Used for results, standings, and session data where FastF1 is insufficient.
-- **Ergast API** (excluded): In maintenance mode and reaches back to 1950, but pre-2022 data is out of scope — the further back, the less technically relevant for era comparison. Revisit only if pre-2022 narrative testing (v0.5.0) requires it.
+- **Jolpica F1 API** (active — replaces Ergast): Community-maintained Ergast mirror at `https://api.jolpi.ca/ergast/f1/`. Ergast went offline Nov 2024; Jolpica provides identical endpoint structure. Used for pre-2022 historical data (constructor standings, race results). Client: `src/data/jolpica_client.py`. Results cached to `data/cache/jolpica/`. Use for 2014 Hybrid Era Year 1 data in the three-era convergence analysis.
 - **Do NOT use** F1 Live Timing credentials or f1-dash.com until licensing is verified.
 
 ### FastF1 Cache

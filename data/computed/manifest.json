@@ -113,8 +113,24 @@
         "had_red_flag"
       ],
       "exported_at": "2026-05-25T01:49:12.064269+00:00"
+    },
+    "era_convergence_by_round": {
+      "rows": 46,
+      "columns": [
+        "season",
+        "round",
+        "era_name",
+        "year_in_era",
+        "p1_points",
+        "pn_points",
+        "gap_p1_pn",
+        "gap_normalised",
+        "gini",
+        "n_constructors"
+      ],
+      "exported_at": "2026-05-25T06:10:45.899123+00:00"
     }
   },
   "fastf1_version": "3.8.2",
-  "last_updated": "2026-05-25T03:16:59.649485+00:00"
+  "last_updated": "2026-05-25T06:10:45.899123+00:00"
 }
